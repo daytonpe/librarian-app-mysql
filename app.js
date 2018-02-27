@@ -6,6 +6,7 @@ var connection = mysql.createConnection({
   password: "",
   database: "COMPANY"
 });
+
 var app = express();
 
 connection.connect(function(err) {
