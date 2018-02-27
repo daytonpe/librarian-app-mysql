@@ -1,0 +1,10 @@
+{
+  "name": "sql-librarian-dashboard",
+  "description": "Dashboard to manage Librarian duties",
+  "author": "Patrick Dayton <github@daytonpe>",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "latest",
+    "mysql": "latest"
+  }
+}
