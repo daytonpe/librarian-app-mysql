@@ -1,8 +1,9 @@
 -- Delete the Database "LIBRARY"
 DROP DATABASE IF EXISTS LIBRARY;
 -- Create the Database "LIBRARY"
-CREATE DATABASE LIBRARY;
-
+CREATE DATABASE LIBRARY
+  DEFAULT CHARACTER SET utf8
+  DEFAULT COLLATE utf8_general_ci;
 -- Set the currently active database to be "COMPANY"
 USE LIBRARY;
 

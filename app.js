@@ -33,11 +33,11 @@ con.connect(function(err) {
     console.log("Number of borrowers inserted: " + result.affectedRows);
   });
 
-  // var sql = "DROP TABLE BOOK";
-  // con.query(sql, function(err, result) {
-  //   if (err) throw err;
-  //   console.log("Number of books deleted: " + result.affectedRows);
-  // });
+  var sql = "TRUNCATE TABLE BOOK;";
+  con.query(sql, function(err, result) {
+    if (err) throw err;
+    console.log("Old Books Cleared");
+  });
 
   // IMPORT BOOK DATA INTO DATABASE
   var sql = "INSERT INTO BOOK (Isbn, Title) VALUES ?";
