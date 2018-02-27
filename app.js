@@ -4,7 +4,8 @@ var fs = require("fs");
 var normalizer = require("./normalizer");
 
 //NORMALIZE THE DATA
-borrowerData = normalizer.normalizeBorrowers();
+borrowerData = normalizer.normalizeBorrower();
+bookData = normalizer.normalizeBook();
 
 //SET UP THE DATABASE CREDENTIALS
 var con = mysql.createConnection({
@@ -29,7 +30,20 @@ con.connect(function(err) {
   var sql = "INSERT INTO BORROWER (Ssn, Bname, Address, Phone) VALUES ?";
   con.query(sql, [borrowerData], function(err, result) {
     if (err) throw err;
-    console.log("Number of records inserted: " + result.affectedRows);
+    console.log("Number of borrowers inserted: " + result.affectedRows);
+  });
+
+  // var sql = "DROP TABLE BOOK";
+  // con.query(sql, function(err, result) {
+  //   if (err) throw err;
+  //   console.log("Number of books deleted: " + result.affectedRows);
+  // });
+
+  // IMPORT BOOK DATA INTO DATABASE
+  var sql = "INSERT INTO BOOK (Isbn, Title) VALUES ?";
+  con.query(sql, [bookData], function(err, result) {
+    if (err) throw err;
+    console.log("Number of books inserted: " + result.affectedRows);
   });
 
   // SHOW ALL BORROWERS

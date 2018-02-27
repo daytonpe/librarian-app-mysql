@@ -2,7 +2,7 @@ var fs = require("fs");
 
 //NORMALIZE THE BORROWER DATA
 module.exports = {
-  normalizeBorrowers: function() {
+  normalizeBorrower: function() {
     var borrowerArr = fs
       .readFileSync("./borrowers.csv")
       .toString()
@@ -22,5 +22,24 @@ module.exports = {
       borrowerData.push(normBorrower);
     }
     return borrowerData;
+  },
+  normalizeBook: function() {
+    var bookArr = fs
+      .readFileSync("./book.csv")
+      .toString()
+      .split("\r");
+    var bookData = [];
+
+    for (var i = 1; i < bookArr.length - 1; i++) {
+      var Isbn = bookArr[i].substring(1, 11);
+      var book = bookArr[i].split("\t");
+      var Title = book[2].toString();
+      var normBook = [];
+      normBook.push(Isbn);
+      normBook.push(Title);
+      bookData.push(normBook);
+    }
+    return bookData;
+    console.log(bookData);
   }
 };
