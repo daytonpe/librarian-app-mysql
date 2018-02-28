@@ -48,15 +48,23 @@ module.exports = {
       .split("\r");
     var authorData = [];
 
-    for (var i = 1; i < 25; i++) {
+    for (var i = 1; i < authorArr.length - 1; i++) {
       var Isbn = authorArr[i].substring(1, 11);
       var authors = authorArr[i].split("\t")[3].split(",");
       var normBookAuthor = [];
       for (var j = 0; j < authors.length; j++) {
-        authorData.push(authors[j]);
+        var arr = [authors[j]];
+        authorData.push(arr);
       }
     }
     // console.log(authorData);
     return authorData;
   }
+  // normalizeBookAuthor: function() {
+  //   var bookAuthorArr = fs
+  //     .readFileSync("./book.csv")
+  //     .toString()
+  //     .split("\r");
+  //   var bookAuthorData = [];
+  // }
 };

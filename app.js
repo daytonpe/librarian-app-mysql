@@ -6,7 +6,7 @@ var normalizer = require("./normalizer");
 //NORMALIZE THE DATA
 borrowerData = normalizer.normalizeBorrower();
 bookData = normalizer.normalizeBook();
-bookAuthorData = normalizer.normalizeAuthor();
+authorData = normalizer.normalizeAuthor();
 
 //SET UP THE DATABASE CREDENTIALS
 var con = mysql.createConnection({
@@ -34,13 +34,15 @@ con.connect(function(err) {
     console.log("Number of borrowers inserted: " + result.affectedRows);
   });
 
-  // sql = "TRUNCATE TABLE BOOK;";
-  // con.query(sql, function(err, result) {
-  //   if (err) throw err;
-  //   console.log("Old Books Cleared");
-  // });
-
   // IMPORT BOOK DATA INTO DATABASE
+  sql = "INSERT INTO AUTHORS (Name) VALUES ?";
+  // console.log(authorData);
+  con.query(sql, [authorData], function(err, result) {
+    if (err) throw err;
+    console.log("Number of authors inserted: " + result.affectedRows);
+  });
+
+  // IMPORT AUTHOR DATA INTO DATABASE
   sql = "INSERT INTO BOOK (Isbn, Title) VALUES ?";
   con.query(sql, [bookData], function(err, result) {
     if (err) throw err;
