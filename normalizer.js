@@ -40,6 +40,23 @@ module.exports = {
       bookData.push(normBook);
     }
     return bookData;
-    console.log(bookData);
+  },
+  normalizeAuthor: function() {
+    var authorArr = fs
+      .readFileSync("./book.csv")
+      .toString()
+      .split("\r");
+    var authorData = [];
+
+    for (var i = 1; i < 25; i++) {
+      var Isbn = authorArr[i].substring(1, 11);
+      var authors = authorArr[i].split("\t")[3].split(",");
+      var normBookAuthor = [];
+      for (var j = 0; j < authors.length; j++) {
+        authorData.push(authors[j]);
+      }
+    }
+    // console.log(authorData);
+    return authorData;
   }
 };

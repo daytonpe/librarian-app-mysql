@@ -11,35 +11,37 @@ USE LIBRARY;
 DROP TABLE IF EXISTS BOOK;
 CREATE TABLE BOOK(
   Isbn VARCHAR(10) NOT NULL,
-  Title VARCHAR(500) NOT NULL,
+  Title VARCHAR(500),
   CONSTRAINT pk_book PRIMARY KEY (Isbn)
 );
 
--- -- Create the Book_Author Schema
--- DROP TABLE IF EXISTS BOOK_AUTHORS;
--- CREATE TABLE BOOK_AUTHOR(
---   Author_id VARCHAR(10) NOT NULL,               --TODO: POINTER!!!
---   Isbn VARCHAR(100) NOT NULL,                   --TODO: POINTER!!!
---   CONSTRAINT pk_book_authors PRIMARY KEY (Isbn) --TODO: HELP
--- );
---
--- -- Create the Authors Schema
--- DROP TABLE IF EXISTS AUTHORS;
--- CREATE TABLE AUTHORS(
---   Author_id VARCHAR(10) NOT NULL,
---   Title VARCHAR(100) NOT NULL,
---   CONSTRAINT pk_authors PRIMARY KEY (Author_id)
--- );
+-- Create the Authors Schema
+DROP TABLE IF EXISTS AUTHORS;
+CREATE TABLE AUTHORS(
+  Author_id INT AUTO_INCREMENT,
+  Name VARCHAR(50) NOT NULL,
+  CONSTRAINT pk_authors PRIMARY KEY (Author_id)
+);
 
 -- Create the Borrower Schema
 DROP TABLE IF EXISTS BORROWER;
 CREATE TABLE BORROWER(
   Card_id INT AUTO_INCREMENT,
   Ssn VARCHAR(11),
-  Bname VARCHAR(35) NOT NULL,
+  Bname VARCHAR(50) NOT NULL,
   Address VARCHAR(50),
   Phone VARCHAR(16),
   CONSTRAINT pk_borrower PRIMARY KEY (Card_id)
+);
+
+-- Create the Book_Author Schema
+DROP TABLE IF EXISTS BOOK_AUTHOR;
+CREATE TABLE BOOK_AUTHOR(
+  Author_id INT,
+  Isbn VARCHAR(10),
+  CONSTRAINT pk_book_authors PRIMARY KEY (Author_id, Isbn),
+  CONSTRAINT fk_bookauthor_book FOREIGN KEY (Isbn) REFERENCES BOOK(Isbn),
+  CONSTRAINT fk_bookauthor_author FOREIGN KEY (Author_id) REFERENCES AUTHORS(Author_id)
 );
 
 -- -- Create the Book Loan Schema
