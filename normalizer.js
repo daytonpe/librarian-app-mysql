@@ -57,14 +57,71 @@ module.exports = {
         authorData.push(arr);
       }
     }
-    // console.log(authorData);
     return authorData;
+  },
+  normalizeBookAuthor: function() {
+    var authorArr = fs
+      .readFileSync("./book.csv")
+      .toString()
+      .split("\r");
+    var bookAuthorData = [];
+    var AUTO_INCREMENT = 0;
+    for (var i = 1; i < authorArr.length - 1; i++) {
+      var Isbn = authorArr[i].substring(1, 11);
+      var authors = authorArr[i].split("\t")[3].split(",");
+      for (var j = 0; j < authors.length; j++) {
+        AUTO_INCREMENT++;
+        var temp = [];
+        temp.push(AUTO_INCREMENT);
+        // temp.push(authors[j]);
+        temp.push(Isbn);
+        bookAuthorData.push(temp); //create an array of [authorname, Isbn] pairs.
+      }
+    }
+    return bookAuthorData;
+  },
+  normalizeAll: function() {
+    var bookArr = fs
+      .readFileSync("./book.csv")
+      .toString()
+      .split("\r");
+    var bookData = [];
+    var authorId = 0;
+    var masterData = []; //array where we will store everything
+    for (var i = 1; i < bookArr.length - 1; i++) {
+      var Isbn = bookArr[i].substring(1, 11);
+      var book = bookArr[i].split("\t");
+      var Title = book[2].toString();
+      var normBook = [];
+      var authors = book[3].split(",");
+
+      normBook.push(Isbn);
+      normBook.push(Title);
+
+      var authorIdArr = [];
+
+      for (var j = 0; j < authors.length; j++) {
+        authorId++;
+        authorIdArr.push([authorId, authors[j]]);
+      }
+
+      normBook.push(authorIdArr);
+      // normBook.push(authorIdArr);
+      // for (var j = 0; i < authors.length; j++) {
+      //   authorId++;
+      //   normBook[2].push(authorId);
+      // }
+      masterData.push(normBook);
+    }
+    // console.log("*****************");
+    // console.log(masterData[0]);
+    // console.log(masterData[1]);
+    // console.log(masterData[2]);
+    // console.log(masterData[3]);
+    // console.log(masterData[4]);
+    // console.log(masterData[5]);
+    //
+    // console.log("*****************");
+    return masterData;
   }
-  // normalizeBookAuthor: function() {
-  //   var bookAuthorArr = fs
-  //     .readFileSync("./book.csv")
-  //     .toString()
-  //     .split("\r");
-  //   var bookAuthorData = [];
-  // }
 };

@@ -5,8 +5,11 @@ var normalizer = require("./normalizer");
 
 //NORMALIZE THE DATA
 borrowerData = normalizer.normalizeBorrower();
-bookData = normalizer.normalizeBook();
-authorData = normalizer.normalizeAuthor();
+// bookData = normalizer.normalizeBook();
+// authorData = normalizer.normalizeAuthor();
+// bookAuthorData = normalizer.normalizeBookAuthor();
+masterData = normalizer.normalizeAll();
+// console.log(masterData[341]);
 
 //SET UP THE DATABASE CREDENTIALS
 var con = mysql.createConnection({
@@ -26,8 +29,33 @@ con.connect(function(err) {
   } else {
     console.log("Error connecting database ... \n\n");
   }
+  var bookData = [];
+  var authorData = [];
+  var bookAuthorsData = [];
+  for (var i = 0; i < masterData.length; i++) {
+    bookData.push([masterData[i][0], masterData[i][1]]); //Isbn, Title
+    for (var k = 0; k < masterData[i][2].length; k++) {
+      authorData.push([masterData[i][2][k][0], masterData[i][2][k][1]]); //authorId, Name
+      bookAuthorsData.push([masterData[i][2][k][0], masterData[i][0]]); //authorId, Isbn
+    }
+  }
 
-  //IMPORT BORROWER DATA INTO DATABASE
+  console.log("BOOK DATA");
+  for (var k = 0; k < 10; k++) {
+    console.log(bookData[k]);
+  }
+  console.log();
+  console.log("AUTHOR DATA");
+  for (var i = 0; i < 25; i++) {
+    console.log(authorData[i]);
+  }
+  console.log();
+  console.log("Book_AUTHORS DATA");
+  for (var i = 0; i < 25; i++) {
+    console.log(bookAuthorsData[i]);
+  }
+
+  // //IMPORT BORROWER DATA INTO DATABASE
   var sql = "INSERT INTO BORROWER (Ssn, Bname, Address, Phone) VALUES ?";
   con.query(sql, [borrowerData], function(err, result) {
     if (err) throw err;
@@ -35,8 +63,7 @@ con.connect(function(err) {
   });
 
   // IMPORT BOOK DATA INTO DATABASE
-  sql = "INSERT INTO AUTHORS (Name) VALUES ?";
-  // console.log(authorData);
+  sql = "INSERT INTO AUTHORS (Author_id, Name) VALUES ?";
   con.query(sql, [authorData], function(err, result) {
     if (err) throw err;
     console.log("Number of authors inserted: " + result.affectedRows);
@@ -47,6 +74,15 @@ con.connect(function(err) {
   con.query(sql, [bookData], function(err, result) {
     if (err) throw err;
     console.log("Number of books inserted: " + result.affectedRows);
+  });
+  //
+  // console.log(masterData[5]);
+
+  // IMPORT BOOK_AUTHOR DATA INTO DATABASE
+  sql = "INSERT INTO BOOK_AUTHORS (Author_id, Isbn) VALUES ?";
+  con.query(sql, [bookAuthorsData], function(err, result) {
+    if (err) throw err;
+    console.log("Number of book_author links inserted: " + result.affectedRows);
   });
 
   // SHOW ALL BORROWERS
