@@ -23,6 +23,16 @@ CREATE TABLE AUTHORS(
   CONSTRAINT pk_authors PRIMARY KEY (Author_id)
 );
 
+-- Create the Book_Author Schema
+DROP TABLE IF EXISTS BOOK_AUTHORS;
+CREATE TABLE BOOK_AUTHORS(
+  Author_id INT,
+  Isbn VARCHAR(10) NOT NULL,
+  CONSTRAINT pk_book_authors PRIMARY KEY (Author_id, Isbn),
+  CONSTRAINT fk_bookauthor_book FOREIGN KEY (Isbn) REFERENCES BOOK(Isbn),
+  CONSTRAINT fk_bookauthor_author FOREIGN KEY (Author_id) REFERENCES AUTHORS(Author_id)
+);
+
 -- Create the Borrower Schema
 DROP TABLE IF EXISTS BORROWER;
 CREATE TABLE BORROWER(
@@ -34,33 +44,26 @@ CREATE TABLE BORROWER(
   CONSTRAINT pk_borrower PRIMARY KEY (Card_id)
 );
 
--- Create the Book_Author Schema
-DROP TABLE IF EXISTS BOOK_AUTHORS;
-CREATE TABLE BOOK_AUTHORS(
-  Author_id INT,
+-- Create the Book Loan Schema
+DROP TABLE IF EXISTS BOOK_LOANS;
+CREATE TABLE BOOK_LOANS(
+  Loan_id INT AUTO_INCREMENT,
   Isbn VARCHAR(10) NOT NULL,
-  CONSTRAINT pk_book_authors PRIMARY KEY (Author_id, Isbn),
-  CONSTRAINT fk_bookauthor_book FOREIGN KEY (Isbn) REFERENCES BOOK(Isbn),
-  CONSTRAINT fk_bookauthor_author FOREIGN KEY (Author_id) REFERENCES AUTHORS(Author_id)
+  Card_id INT NOT NULL,
+  Date_out DATE,
+  Due_date DATE,
+  Date_in DATE,
+  CONSTRAINT pk_book_loan PRIMARY KEY (Loan_id),
+  CONSTRAINT fk_bookloan_book FOREIGN KEY (Isbn) REFERENCES BOOK(Isbn),
+  CONSTRAINT fk_bookloan_borrower FOREIGN KEY (Card_id) REFERENCES BORROWER(Card_id)
 );
 
--- -- Create the Book Loan Schema
--- DROP TABLE IF EXISTS BOOK_LOANS;
--- CREATE TABLE BOOK_LOANS(
---   Loan_id,
---   Isbn,
---   Card_id,
---   Date_out,
---   Due_date,
---   Date_in,
---   CONSTRAINT pk_book_loan PRIMARY KEY (Loan_id)
--- );
---
--- -- Create the Fines Schema
--- DROP TABLE IF EXISTS FINES;
--- CREATE TABLE FINES(
---   Loan_id,
---   Fine_amt,
---   Paid,
---   CONSTRAINT pk_fines PRIMARY KEY (Loan_id)
--- );
+-- Create the Fines Schema
+DROP TABLE IF EXISTS FINES;
+CREATE TABLE FINES(
+  Loan_id INT,
+  Fine_amt DECIMAL(10,2),
+  Paid DATE,
+  CONSTRAINT pk_fines PRIMARY KEY (Loan_id),
+  CONSTRAINT fk_fines_bookloan FOREIGN KEY (Loan_id) REFERENCES BOOK_LOANS(Loan_id)
+);
