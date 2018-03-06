@@ -121,12 +121,40 @@ con.connect(function(err) {
 
   //CHECKOUT A BOOK
   app.get("/checkout", function(req, res) {
-    // console.log(req.query.Card_id);
     let Isbn = req.query.Isbn;
     let Card_id = req.query.Card_id;
+
+    //IS ID VALID?
+    sql = `SELECT COUNT(Card_id) FROM BORROWER WHERE Card_id =`+Card_id+`;`;
+    con.query(sql, req.body, function(err, result) {
+      if (err) throw err;
+      console.log(sql);
+      console.log(result);
+      console.log('*********');
+    });
+
+
+    //IS BOOK ALREADY CHECKED OUT?
+    sql = `SELECT COUNT(Isbn) FROM BOOK_LOANS WHERE Isbn = '`+Isbn+`' AND Date_in IS NULL;`;
+    con.query(sql, req.body, function(err, result) {
+      if (err) throw err;
+      console.log(sql);
+      console.log(result);
+      console.log('*********');
+    });
+
+    //DOES THE BORROWER HAVE 3 BOOKS ALREADY?
+    sql = `SELECT COUNT(Card_id) FROM BOOK_LOANS WHERE Card_id = `+Card_id+`;`;
+    con.query(sql, req.body, function(err, result) {
+      if (err) throw err;
+      console.log(sql);
+      console.log(result);
+      console.log('*********');
+    });
+
     let Date_out = 'NOW()';
     let Due_date = 'NOW() + INTERVAL 14 DAY';
-    sql = `INSERT INTO BOOK_LOANS (Isbn, Card_id, Date_out, Due_date) VALUES ('`+Isbn+`','`+Card_id+`','`+Date_out+`', '`+Due_date+`')`;
+    sql = `INSERT INTO BOOK_LOANS (Isbn, Card_id, Date_out, Due_date) VALUES ('`+Isbn+`','`+Card_id+`',`+Date_out+`, `+Due_date+`)`;
     console.log(sql);
     con.query(sql, req.body, function(err, result) {
       if (err) throw err;

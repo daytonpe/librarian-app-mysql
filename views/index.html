@@ -56,27 +56,17 @@
 
             $.ajax({
               url: "/checkout",
-              // url: "/test",
               type: "GET",
               data: $form3.serialize()+"&Isbn=" + Isbn
             }).done(response => {
               // $("#createBorrowerSuccess").html(response);
+              $("#checkoutInputForm").hide();
+              $("#checkoutInputFormLabel").hide();
+              $("#checkoutInfoDiv").html('<p>'+response+'</p>');
               console.log(response);
             });
-
-        })
-      });
-
-        // function attemptCheckout (e) {
-        //   $.ajax({
-        //     url: '/createBorrower',
-        //     type:'GET',
-        //     data: $form2.serialize()
-        //   }).done(response => {
-        //     // $("#createBorrowerSuccess").html(response);
-        //     console.log(response);
-        //   })
-        // }
+          })
+        });
 
       });
 
@@ -146,15 +136,15 @@
             </div>
             <div class="modal-body">
               <form id="checkoutForm" method="GET" action="/test">
-                <div class="form-group">
-                  <label for="Card_id"class="col-form-label">Borrower Card ID:</label>
-                  <input type="number" class="form-control" name="Card_id" id="Card_id">
+                <div class="form-group" id="checkoutInfoDiv">
+                  <label for="Card_id"class="col-form-label" id="checkoutInputFormLabel">Borrower Card ID:</label>
+                  <input type="number" class="form-control" name="Card_id" id="checkoutInputForm">
                 </div>
-                <button type="submit" class="btn btn-primary">Checkout</button>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Checkout</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
               </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
           </div>
         </div>
