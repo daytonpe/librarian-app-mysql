@@ -7,11 +7,7 @@ var
 
 //NORMALIZE THE DATA
 borrowerData = normalizer.normalizeBorrower();
-// bookData = normalizer.normalizeBook();
-// authorData = normalizer.normalizeAuthor();
-// bookAuthorData = normalizer.normalizeBookAuthor();
 masterData = normalizer.normalizeAll();
-// console.log(masterData[341]);
 
 //SET UP THE DATABASE CREDENTIALS
 var con = mysql.createConnection({
@@ -32,7 +28,7 @@ con.connect(function(err) {
     console.log("Error connecting database ... \n\n");
   }
 
-  //parse data from initializer
+  //PARSE FROM INITIALIZER
   var bookData = [];
   var authorData = [];
   var bookAuthorsData = [];
@@ -72,13 +68,15 @@ con.connect(function(err) {
     console.log("Number of book_author links inserted: " + result.affectedRows);
   });
 
+  //JOIN PUBLIC DIRECTORY FOR CSS
   app.use(express.static(path.join(__dirname, "public")));
 
+  //SERVE HOMEPAGE
   app.get("/", function(req, res) {
     res.sendFile(path.join(__dirname + "/views/index.html"));
-  }); //serve the homepage
+  });
 
-  //SEARCH SUBMIT
+  //SEARCH
   app.get("/search", function(req, res) {
     const searchTerm = req.query.search; //grab search term from form
     sql =
@@ -121,28 +119,18 @@ con.connect(function(err) {
     });
   });
 
-  // //CHECK OUT BOOK
-  // app.get("/:Isbn/", function(req, res) {
-  //   let Isbn = '';
-  //   let Card_id = '';
-  //   let Date_out = '';
-  //   let Due_date = '';
-  //   let Date_in = '';
-  //
-  //   sql = `INSERT INTO BOOK_LOANS (Ssn, Bname, Address, Phone) VALUES ('`+Isbn+`','`+Card_id+`','`+Date_out+`', '`+Due_date+`', '`+Date_in+`') `;
-  //   console.log(sql);
-  //   con.query(sql, req.body, function(err, result) {
-  //     if (err) throw err;
-  //   });
-  // });
-
+  //CHECKOUT A BOOK
   app.get("/checkout", function(req, res) {
     // console.log(req.query.Card_id);
-    console.log("server side" + req.query.Isbn);
-    console.log("server side" + req.query.Card_id);
+    let Isbn = req.query.Isbn;
+    let Card_id = req.query.Card_id;
+    let Date_out = 'NOW()';
+    let Due_date = 'NOW() + INTERVAL 14 DAY';
+    sql = `INSERT INTO BOOK_LOANS (Isbn, Card_id, Date_out, Due_date) VALUES ('`+Isbn+`','`+Card_id+`','`+Date_out+`', '`+Due_date+`')`;
+    console.log(sql);
     con.query(sql, req.body, function(err, result) {
       if (err) throw err;
-      res.send("You're a wizard, Harry!")
+      res.send("Book loan noted!")
     });
   });
 
