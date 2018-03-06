@@ -105,8 +105,6 @@ con.connect(function(err) {
     });
   });
 
-
-
   app.get("/createBorrower", function(req, res) {
     let bname = req.query.name;
     let address = req.query.address;
@@ -120,21 +118,8 @@ con.connect(function(err) {
     });
   });
 
-
-
-
-
 });
 
-// app.get("/", function(req, res) {
-// con.query("SELECT * from EMPLOYEE LIMIT 2", function(err, rows, fields) {
-//   con.end();
-//   if (!err) console.log("The solution is: ", rows);
-//   else console.log("Error while performing Query.");
-// });
-// });
-
-// con.end();
 try {
   app.listen(3000);
   console.log("Connected on Port 3000!");
