@@ -39,13 +39,13 @@
             type:'GET',
             data: $form.serialize()
           }).done(response => {
-            // console.log(response)
+            console.log("PRINT TO OUTPUT!")
+            $("#output").html(response);
+            console.log(response);
           })
         }
 
       });
-
-
 
 
     </script>

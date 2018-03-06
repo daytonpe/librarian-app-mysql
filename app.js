@@ -72,13 +72,6 @@ con.connect(function(err) {
     console.log("Number of book_author links inserted: " + result.affectedRows);
   });
 
-  // SHOW ALL BORROWERS
-  // var searchTerm = "Williams";
-  // con.query("SELECT * FROM BORROWER", function(err, result, fields) {
-  //   if (err) throw err;
-  //   console.log(result);
-  // });
-
   app.use(express.static(path.join(__dirname, "public")));
 
   app.get("/", function(req, res) {
@@ -86,10 +79,8 @@ con.connect(function(err) {
   });
 
   app.get("/search", function(req, res) {
-    console.log(req.query.search);
-    // console.log(doug);
-    // let dougLess = JSON.stringify(req.query);
-    // console.log(dougLess);
+    // console.log(req.query.search);
+    const searchTerm = req.query.search; //grab search term from form
     sql =
       `SELECT  BOOK.Isbn,
               BOOK.Title,
@@ -99,19 +90,18 @@ con.connect(function(err) {
                   ON BOOK.Isbn = BOOK_AUTHORS.Isbn
               INNER JOIN AUTHORS
                   ON BOOK_AUTHORS.Author_ID = AUTHORS.Author_ID
-      WHERE   BOOK.Title LIKE '%Harry%'
-              OR AUTHORS.Name LIKE '%Harry%'
-              OR BOOK.Isbn LIKE '%Harry%'
-      GROUP   BY BOOK.Isbn, BOOK.Title`;
+      WHERE   BOOK.Title LIKE '%`+searchTerm+`%'
+              OR AUTHORS.Name LIKE '%`+searchTerm+`%'
+              OR BOOK.Isbn LIKE '%`+searchTerm+`%'
+      GROUP   BY BOOK.Isbn, BOOK.Title`; //insert searchTerm into the sql query
     con.query(sql, req.body, function(err, result) {
-      // console.log(req.body);
       if (err) throw err;
       let table = "";
       for (let i = 0; i < result.length; i++) {
         let newRow = "<p>"+result[i].Isbn+"\t|\t"+result[i].Title+"\t|\t"+result[i].Authors+"\t|\t<a>Check Out</a></p>";
         table+=newRow;
       }
-      // console.log(req.query.);
+      // console.log(table);
       res.send(table);
     });
   });
