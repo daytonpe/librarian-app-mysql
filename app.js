@@ -100,7 +100,7 @@ con.connect(function(err) {
       for (let i = 0; i < result.length; i++) {
         let checkoutButton = "<button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#exampleModal\" data-whatever=\""+result[i].Isbn+"\">Check Out</button>";
         let newRow = "<p>"+result[i].Isbn+"\t|\t"+result[i].Title+"\t|\t"+result[i].Authors+"\t|"+checkoutButton+"</p>";
-        console.log(newRow);
+        // console.log(newRow);
         table+=newRow;
       }
       res.send(table);
@@ -121,20 +121,32 @@ con.connect(function(err) {
     });
   });
 
-  //CHECK OUT BOOK
-  app.get("/:Isbn", function(req, res) {
-    let Isbn = '';
-    let Card_id = '';
-    let Date_out = '';
-    let Due_date = '';
-    let Date_in = '';
+  // //CHECK OUT BOOK
+  // app.get("/:Isbn/", function(req, res) {
+  //   let Isbn = '';
+  //   let Card_id = '';
+  //   let Date_out = '';
+  //   let Due_date = '';
+  //   let Date_in = '';
+  //
+  //   sql = `INSERT INTO BOOK_LOANS (Ssn, Bname, Address, Phone) VALUES ('`+Isbn+`','`+Card_id+`','`+Date_out+`', '`+Due_date+`', '`+Date_in+`') `;
+  //   console.log(sql);
+  //   con.query(sql, req.body, function(err, result) {
+  //     if (err) throw err;
+  //   });
+  // });
 
-    sql = `INSERT INTO BOOK_LOANS (Ssn, Bname, Address, Phone) VALUES ('`+Isbn+`','`+Card_id+`','`+Date_out+`', '`+Due_date+`', '`+Date_in+`') `;
-    console.log(sql);
+  app.get("/checkout", function(req, res) {
+    // console.log(req.query.Card_id);
+    console.log("server side" + req.query.Isbn);
+    console.log("server side" + req.query.Card_id);
     con.query(sql, req.body, function(err, result) {
       if (err) throw err;
+      res.send("You're a wizard, Harry!")
     });
   });
+
+
 });
 
 try {

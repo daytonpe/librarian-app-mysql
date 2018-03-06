@@ -12,6 +12,7 @@
 
         const $form1 = $('#searchForm');
         const $form2 = $('#createBorrowerForm');
+        const $form3 = $('#checkoutForm');
 
         $form1.on('submit', searchSubmitHandler);
         $form2.on('submit', createBorrowerSubmitHandler);
@@ -45,7 +46,26 @@
           var Isbn = button.data('whatever') // Extract info from data-* attributes
           var modal = $(this)
           modal.find('.modal-title').text('Check out book ' + Isbn)
+
+          $form3.on('submit', function(e){
+            console.log('FORM 3 SUBMITTED WITH ISBN: '+Isbn);
+            // let form3data = $form3.serialize()
+            // console.log($form3.serialize());
+            // console.log(form3data);
+            e.preventDefault();
+
+            $.ajax({
+              url: "/checkout",
+              // url: "/test",
+              type: "GET",
+              data: $form3.serialize()+"&Isbn=" + Isbn
+            }).done(response => {
+              // $("#createBorrowerSuccess").html(response);
+              console.log(response);
+            });
+
         })
+      });
 
         // function attemptCheckout (e) {
         //   $.ajax({
@@ -101,7 +121,7 @@
       <form class = "form-inline" id="searchForm" method="GET" action="/search">
         <div class="form-group mx-sm-3 mb-2">
           <!-- <label for="search">Search</label> -->
-          <input class="form-control" name="search" type="text" id="search" placeholder="Douglas Adams"/>
+          <input class="form-control" name="search" type="text" id="search" placeholder="Douglas Adams" required/>
         </div>
         <button type="submit" class="btn btn-primary mb-2">Search</button>
       </form>
@@ -125,16 +145,16 @@
               </button>
             </div>
             <div class="modal-body">
-              <form>
+              <form id="checkoutForm" method="GET" action="/test">
                 <div class="form-group">
                   <label for="Card_id"class="col-form-label">Borrower Card ID:</label>
-                  <input type="text" class="form-control" id="Card_id">
+                  <input type="number" class="form-control" name="Card_id" id="Card_id">
                 </div>
+                <button type="submit" class="btn btn-primary">Checkout</button>
               </form>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Send message</button>
             </div>
           </div>
         </div>
