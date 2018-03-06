@@ -76,7 +76,7 @@ con.connect(function(err) {
 
   app.get("/", function(req, res) {
     res.sendFile(path.join(__dirname + "/views/index.html"));
-  });
+  }); //serve the homepage
 
   app.get("/search", function(req, res) {
     // console.log(req.query.search);
@@ -101,10 +101,29 @@ con.connect(function(err) {
         let newRow = "<p>"+result[i].Isbn+"\t|\t"+result[i].Title+"\t|\t"+result[i].Authors+"\t|\t<a>Check Out</a></p>";
         table+=newRow;
       }
-      // console.log(table);
       res.send(table);
     });
   });
+
+
+
+  app.get("/createBorrower", function(req, res) {
+    let bname = req.query.name;
+    let address = req.query.address;
+    let ssn = req.query.ssn;
+    let phone = req.query.phone;
+    sql = `INSERT INTO BORROWER (Ssn, Bname, Address, Phone) VALUES ('`+ssn+`', '`+bname+`', '`+address+`', '`+phone+`') `;
+    console.log(sql);
+    con.query(sql, req.body, function(err, result) {
+      if (err) throw err;
+      res.send("Borrower added: "+bname);
+    });
+  });
+
+
+
+
+
 });
 
 // app.get("/", function(req, res) {

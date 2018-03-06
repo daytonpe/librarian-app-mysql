@@ -27,24 +27,35 @@
         //   return false; // keeps the form from submitting (text doesn't disappear.)
         // });
 
-        const $form = $('#searchForm')
+        const $form1 = $('#searchForm');
+        const $form2 = $('#createBorrowerForm');
 
-        $form.on('submit', submitHandler)
+        $form1.on('submit', searchSubmitHandler);
+        $form2.on('submit', createBorrowerSubmitHandler);
 
-        function submitHandler (e) {
+        function searchSubmitHandler (e) {
           e.preventDefault()
-
           $.ajax({
             url: '/search',
             type:'GET',
-            data: $form.serialize()
+            data: $form1.serialize()
           }).done(response => {
-            console.log("PRINT TO OUTPUT!")
             $("#output").html(response);
-            console.log(response);
           })
         }
 
+        function createBorrowerSubmitHandler (e) {
+          console.log($form2.serialize());
+          e.preventDefault()
+          $.ajax({
+            url: '/createBorrower',
+            type:'GET',
+            data: $form2.serialize()
+          }).done(response => {
+            // $("#createBorrowerSuccess").html(response);
+            console.log(response);
+          })
+        }
       });
 
 
@@ -58,24 +69,27 @@
       <p>Add a borrower to the database to issue library card</p>
       <br>
 
-      <form class = "form-inline" id="createBorrowerForm" method="POST" action="/createBorrower">
+      <form class = "form-inline" id="createBorrowerForm" method="GET" action="/createBorrower">
         <div class="form-group">
           <label for="name">Name</label>
-          <input type="name" class="form-control" id="bname" placeholder="Han Solo" required>
+          <input class="form-control"  name="name" type="name" id="bname" placeholder="Han Solo" required>
         </div>
         <div class="form-group">
           <label for="address">Address</label>
-          <input type="address" class="form-control" id="address" placeholder="111 Millenium Way, Endor, TX 75204" required>
+          <input class="form-control"  name="address" type="address"  id="address" placeholder="111 Millenium Way, Endor, TX 75204" required>
         </div>
         <div class="form-group">
           <label for="ssn">SSN</label>
-          <input type="email" class="form-control" id="ssn" placeholder="111223333" required>
+          <input class="form-control"  name="ssn" type="text" id="ssn" placeholder="111223333" required>
         </div>
         <div class="form-group">
-          <label for="exampleFormControlInput1">Phone</label>
-          <input type="email" class="form-control" id="phone" placeholder="9998887777">
+          <label for="phone">Phone</label>
+          <input class="form-control" name="phone" type="phone" id="phone" placeholder="9998887777">
         </div>
+        <button type="submit" class="btn btn-primary mb-2">Search</button>
       </form>
+
+      <div id="createBorrowerSuccess"></div>
 
       <br><br><br>
 
