@@ -3,6 +3,7 @@ var mysql = require("mysql");
 var fs = require("fs");
 var normalizer = require("./normalizer");
 var path = require("path");
+var
 
 //NORMALIZE THE DATA
 borrowerData = normalizer.normalizeBorrower();
@@ -85,15 +86,32 @@ con.connect(function(err) {
   });
 
   app.get("/search", function(req, res) {
-    console.log("receiving get message");
-    con.query("SELECT * FROM BOOK LIMIT 10;", req.body, function(err, result) {
+    console.log(req.query.search);
+    // console.log(doug);
+    // let dougLess = JSON.stringify(req.query);
+    // console.log(dougLess);
+    sql =
+      `SELECT  BOOK.Isbn,
+              BOOK.Title,
+              GROUP_CONCAT(AUTHORS.Name ORDER BY AUTHORS.Name) Authors
+      FROM    BOOK
+              INNER JOIN BOOK_AUTHORS
+                  ON BOOK.Isbn = BOOK_AUTHORS.Isbn
+              INNER JOIN AUTHORS
+                  ON BOOK_AUTHORS.Author_ID = AUTHORS.Author_ID
+      WHERE   BOOK.Title LIKE '%Harry%'
+              OR AUTHORS.Name LIKE '%Harry%'
+              OR BOOK.Isbn LIKE '%Harry%'
+      GROUP   BY BOOK.Isbn, BOOK.Title`;
+    con.query(sql, req.body, function(err, result) {
+      // console.log(req.body);
       if (err) throw err;
       let table = "";
       for (let i = 0; i < result.length; i++) {
-        let newRow = "<p>"+result[i].Isbn+"\t|\t"+result[i].Title+"</p>";
+        let newRow = "<p>"+result[i].Isbn+"\t|\t"+result[i].Title+"\t|\t"+result[i].Authors+"\t|\t<a>Check Out</a></p>";
         table+=newRow;
       }
-      console.log(table);
+      // console.log(req.query.);
       res.send(table);
     });
   });

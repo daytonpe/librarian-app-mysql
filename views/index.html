@@ -10,23 +10,44 @@
 
     <script type="text/javascript">
       $(document).ready(function() {
-        $("#searchTermSubmit").click(function() {
-          var payload = {
-            name: $("#searchTerm").val()
-          };
+        // $("#searchTermSubmit").click(function() {
+        //   var payload = {
+        //     name: $("#searchTerm").val()
+        //   };
+        //   $.ajax({
+        //     url: "/search",
+        //     type: "GET",
+        //     contentType: "application/json",
+        //     processData: false,
+        //     data: JSON.stringify(payload),
+        //     complete: function(data) {
+        //       $("#output").append(data.responseText);
+        //     }
+        //   });
+        //   return false; // keeps the form from submitting (text doesn't disappear.)
+        // });
+
+        const $form = $('#searchForm')
+
+        $form.on('submit', submitHandler)
+
+        function submitHandler (e) {
+          e.preventDefault()
+
           $.ajax({
-            url: "/search",
-            type: "GET",
-            contentType: "application/json",
-            processData: false,
-            data: JSON.stringify(payload),
-            complete: function(data) {
-              $("#output").append(data.responseText);
-            }
-          });
-          return false; // keeps the form from submitting (text doesn't disappear.)
-        });
+            url: '/search',
+            type:'GET',
+            data: $form.serialize()
+          }).done(response => {
+            // console.log(response)
+          })
+        }
+
       });
+
+
+
+
     </script>
 
   </head>
@@ -35,15 +56,14 @@
     <div id="main">
       <h1 class="title">Librarian</h1>
       <p>Search for a book in the database by any combination of ISBN, Title, and/or Author(s)</h3>
-        <div class="searchForm">
-          <form class="form-inline">
-            <div class="form-group mx-sm-3 mb-2">
-              <label for="inputPassword2" class="sr-only">Password</label>
-              <input type="text" class="form-control" id="searchTerm" placeholder="Douglas Adams">
-            </div>
-            <button class="btn btn-primary mb-2" id="searchTermSubmit">Search</button>
-          </form>
-        </div>
+
+        <form class = "form-inline" id="searchForm" method="GET" action="/search">
+          <div class="form-group mx-sm-3 mb-2">
+            <!-- <label for="search">Search</label> -->
+            <input class="form-control" name="search" type="text" id="search" placeholder="Douglas Adams"/>
+          </div>
+          <button type="submit" class="btn btn-primary mb-2">Search</button>
+        </form>
 
       <br><br>
 
@@ -54,10 +74,10 @@
       <br><br>
     </div>
 
-      <table id="searchResultTable" class="table table-hover">
+      <!-- <table id="searchResultTable" class="table table-hover">
         <thead>
           <tr>
-            <th scope="col">ID</th>
+            <th scope="col">Availability</th>
             <th scope="col">ISBN</th>
             <th scope="col">Title</th>
             <th scope="col">Authors</th>
@@ -82,7 +102,8 @@
             <td>@twitter</td>
           </tr>
         </tbody>
-      </table>
+      </table> -->
+
 
 
   </body>

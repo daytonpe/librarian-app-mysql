@@ -4,6 +4,7 @@
   "author": "Patrick Dayton <github@daytonpe>",
   "version": "0.0.1",
   "dependencies": {
+    "body-parser": "^1.18.2",
     "express": "latest",
     "mysql": "latest"
   }
