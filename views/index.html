@@ -9,28 +9,28 @@
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
     <script type="text/javascript">
-    $(document).ready(function() {
-
-      $("#searchTermSubmit").click(function() {
-        var payload = {
-          name: $("#searchTerm").val()
-        };
-        $.ajax({
-          url: "/search",
-          type: "GET",
-          contentType: "application/json",
-          processData: false,
-          data: JSON.stringify(payload),
-          complete: function(data) {
-            $("#output").html(data.responseText);
-          }
+      $(document).ready(function() {
+        $("#searchTermSubmit").click(function() {
+          var payload = {
+            name: $("#searchTerm").val()
+          };
+          $.ajax({
+            url: "/search",
+            type: "GET",
+            contentType: "application/json",
+            processData: false,
+            data: JSON.stringify(payload),
+            complete: function(data) {
+              $("#output").append(data.responseText);
+            }
+          });
+          return false; // keeps the form from submitting (text doesn't disappear.)
         });
-        return false; // keeps the form from submitting (text doesn't disappear.)
       });
-    });
-
     </script>
+
   </head>
+
   <body>
     <div id="main">
       <h1 class="title">Librarian</h1>
@@ -49,7 +49,42 @@
 
       <!-- <input id="user-name" type="text" />
       <input id="user-submit" type="submit" /> -->
-      <p id="output"></p>
+      <div id="output"></div>
+
+      <br><br>
     </div>
+
+      <table id="searchResultTable" class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">ISBN</th>
+            <th scope="col">Title</th>
+            <th scope="col">Authors</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>Jacob</td>
+            <td>Thornton</td>
+            <td>@fat</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td colspan="2">Larry the Bird</td>
+            <td>@twitter</td>
+          </tr>
+        </tbody>
+      </table>
+
+
   </body>
+
 </html>

@@ -86,16 +86,17 @@ con.connect(function(err) {
 
   app.get("/search", function(req, res) {
     console.log("receiving get message");
-    con.query("SELECT * FROM BOOK LIMIT 10;", req.body, function(
-      err,
-      result
-    ) {
+    con.query("SELECT * FROM BOOK LIMIT 10;", req.body, function(err, result) {
       if (err) throw err;
-      res.send(result);
+      let table = "";
+      for (let i = 0; i < result.length; i++) {
+        let newRow = "<p>"+result[i].Isbn+"\t|\t"+result[i].Title+"</p>";
+        table+=newRow;
+      }
+      console.log(table);
+      res.send(table);
     });
   });
-
-
 });
 
 // app.get("/", function(req, res) {
