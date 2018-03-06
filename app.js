@@ -78,8 +78,8 @@ con.connect(function(err) {
     res.sendFile(path.join(__dirname + "/views/index.html"));
   }); //serve the homepage
 
+  //SEARCH SUBMIT
   app.get("/search", function(req, res) {
-    // console.log(req.query.search);
     const searchTerm = req.query.search; //grab search term from form
     sql =
       `SELECT  BOOK.Isbn,
@@ -98,13 +98,16 @@ con.connect(function(err) {
       if (err) throw err;
       let table = "";
       for (let i = 0; i < result.length; i++) {
-        let newRow = "<p>"+result[i].Isbn+"\t|\t"+result[i].Title+"\t|\t"+result[i].Authors+"\t|\t<a>Check Out</a></p>";
+        let checkoutButton = "<button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#exampleModal\" data-whatever=\""+result[i].Isbn+"\">Check Out</button>";
+        let newRow = "<p>"+result[i].Isbn+"\t|\t"+result[i].Title+"\t|\t"+result[i].Authors+"\t|"+checkoutButton+"</p>";
+        console.log(newRow);
         table+=newRow;
       }
       res.send(table);
     });
   });
 
+  //CREATE A BORROWER
   app.get("/createBorrower", function(req, res) {
     let bname = req.query.name;
     let address = req.query.address;
@@ -118,6 +121,20 @@ con.connect(function(err) {
     });
   });
 
+  //CHECK OUT BOOK
+  app.get("/:Isbn", function(req, res) {
+    let Isbn = '';
+    let Card_id = '';
+    let Date_out = '';
+    let Due_date = '';
+    let Date_in = '';
+
+    sql = `INSERT INTO BOOK_LOANS (Ssn, Bname, Address, Phone) VALUES ('`+Isbn+`','`+Card_id+`','`+Date_out+`', '`+Due_date+`', '`+Date_in+`') `;
+    console.log(sql);
+    con.query(sql, req.body, function(err, result) {
+      if (err) throw err;
+    });
+  });
 });
 
 try {
