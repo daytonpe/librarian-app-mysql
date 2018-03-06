@@ -2,6 +2,7 @@ var express = require("express");
 var mysql = require("mysql");
 var fs = require("fs");
 var normalizer = require("./normalizer");
+var path = require("path");
 
 //NORMALIZE THE DATA
 borrowerData = normalizer.normalizeBorrower();
@@ -29,6 +30,8 @@ con.connect(function(err) {
   } else {
     console.log("Error connecting database ... \n\n");
   }
+
+  //parse data from initializer
   var bookData = [];
   var authorData = [];
   var bookAuthorsData = [];
@@ -38,21 +41,6 @@ con.connect(function(err) {
       authorData.push([masterData[i][2][k][0], masterData[i][2][k][1]]); //authorId, Name
       bookAuthorsData.push([masterData[i][2][k][0], masterData[i][0]]); //authorId, Isbn
     }
-  }
-
-  console.log("BOOK DATA");
-  for (var k = 0; k < 10; k++) {
-    console.log(bookData[k]);
-  }
-  console.log();
-  console.log("AUTHOR DATA");
-  for (var i = 0; i < 25; i++) {
-    console.log(authorData[i]);
-  }
-  console.log();
-  console.log("Book_AUTHORS DATA");
-  for (var i = 0; i < 25; i++) {
-    console.log(bookAuthorsData[i]);
   }
 
   // //IMPORT BORROWER DATA INTO DATABASE
@@ -75,8 +63,6 @@ con.connect(function(err) {
     if (err) throw err;
     console.log("Number of books inserted: " + result.affectedRows);
   });
-  //
-  // console.log(masterData[5]);
 
   // IMPORT BOOK_AUTHOR DATA INTO DATABASE
   sql = "INSERT INTO BOOK_AUTHORS (Author_id, Isbn) VALUES ?";
@@ -91,6 +77,25 @@ con.connect(function(err) {
   //   if (err) throw err;
   //   console.log(result);
   // });
+
+  app.use(express.static(path.join(__dirname, "public")));
+
+  app.get("/", function(req, res) {
+    res.sendFile(path.join(__dirname + "/views/index.html"));
+  });
+
+  app.get("/search", function(req, res) {
+    console.log("receiving get message");
+    con.query("SELECT * FROM BOOK LIMIT 10;", req.body, function(
+      err,
+      result
+    ) {
+      if (err) throw err;
+      res.send(result);
+    });
+  });
+
+
 });
 
 // app.get("/", function(req, res) {
@@ -102,4 +107,9 @@ con.connect(function(err) {
 // });
 
 // con.end();
-// app.listen(3000);
+try {
+  app.listen(3000);
+  console.log("Connected on Port 3000!");
+} catch (e) {
+  console.log("There has been a problem connecting to Port 3000");
+}

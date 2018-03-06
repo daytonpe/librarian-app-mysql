@@ -40,7 +40,7 @@ module.exports = {
       bookData.push(normBook);
     }
     return bookData;
-  },
+  }, //unused
   normalizeAuthor: function() {
     var authorArr = fs
       .readFileSync("./book.csv")
@@ -58,7 +58,7 @@ module.exports = {
       }
     }
     return authorData;
-  },
+  }, //unused
   normalizeBookAuthor: function() {
     var authorArr = fs
       .readFileSync("./book.csv")
@@ -79,7 +79,7 @@ module.exports = {
       }
     }
     return bookAuthorData;
-  },
+  }, //unused
   normalizeAll: function() {
     var bookArr = fs
       .readFileSync("./book.csv")
@@ -113,15 +113,6 @@ module.exports = {
       // }
       masterData.push(normBook);
     }
-    // console.log("*****************");
-    // console.log(masterData[0]);
-    // console.log(masterData[1]);
-    // console.log(masterData[2]);
-    // console.log(masterData[3]);
-    // console.log(masterData[4]);
-    // console.log(masterData[5]);
-    //
-    // console.log("*****************");
     return masterData;
   }
 };
