@@ -54,16 +54,41 @@
 
   <body>
     <div id="main">
-      <h1 class="title">Librarian</h1>
+      <h1 class="title">Add Borrower</h1>
+      <p>Add a borrower to the database to issue library card</p>
+      <br>
+
+      <form class = "form-inline" id="createBorrowerForm" method="POST" action="/createBorrower">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="name" class="form-control" id="bname" placeholder="Han Solo" required>
+        </div>
+        <div class="form-group">
+          <label for="address">Address</label>
+          <input type="address" class="form-control" id="address" placeholder="111 Millenium Way, Endor, TX 75204" required>
+        </div>
+        <div class="form-group">
+          <label for="ssn">SSN</label>
+          <input type="email" class="form-control" id="ssn" placeholder="111223333" required>
+        </div>
+        <div class="form-group">
+          <label for="exampleFormControlInput1">Phone</label>
+          <input type="email" class="form-control" id="phone" placeholder="9998887777">
+        </div>
+      </form>
+
+      <br><br><br>
+
+      <h1 class="title">Search Books</h1>
       <p>Search for a book in the database by any combination of ISBN, Title, and/or Author(s)</h3>
 
-        <form class = "form-inline" id="searchForm" method="GET" action="/search">
-          <div class="form-group mx-sm-3 mb-2">
-            <!-- <label for="search">Search</label> -->
-            <input class="form-control" name="search" type="text" id="search" placeholder="Douglas Adams"/>
-          </div>
-          <button type="submit" class="btn btn-primary mb-2">Search</button>
-        </form>
+      <form class = "form-inline" id="searchForm" method="GET" action="/search">
+        <div class="form-group mx-sm-3 mb-2">
+          <!-- <label for="search">Search</label> -->
+          <input class="form-control" name="search" type="text" id="search" placeholder="Douglas Adams"/>
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Search</button>
+      </form>
 
       <br><br>
 

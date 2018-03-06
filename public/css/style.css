@@ -19,3 +19,8 @@
 div#output{
   text-align: left;
 }
+
+#createBorrowerForm{
+  text-align: left;
+  /* width: 70%; */
+}
