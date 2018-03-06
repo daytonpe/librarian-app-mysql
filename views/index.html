@@ -59,11 +59,9 @@
               type: "GET",
               data: $form3.serialize()+"&Isbn=" + Isbn
             }).done(response => {
-              // $("#createBorrowerSuccess").html(response);
               $("#checkoutInputForm").hide();
               $("#checkoutInputFormLabel").hide();
-              $("#checkoutInfoDiv").html('<p>'+response+'</p>');
-              console.log(response);
+              $("#checkoutInfoDiv").html('<p>'+response.message+'</p>');
             });
           })
         });
