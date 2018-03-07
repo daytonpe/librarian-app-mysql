@@ -15,6 +15,7 @@
         const $form3 = $('#checkoutForm');
         const $form4 = $('#searchLoanForm');
         const $form5 = $('#checkinForm');
+        const $form6 = $('#payFineForm');
 
         $form1.on('submit', searchBookSubmitHandler);
         $form2.on('submit', createBorrowerSubmitHandler);
@@ -112,12 +113,33 @@
 
         $('#viewFinesButton').click(function(){
           $.ajax({
-            url: "/receivePayment",
+            url: "/viewfines",
             type: "GET"
           }).done(response => {
             console.log(response);
             $("#viewFinesDiv").html(response);
           });
+        });
+
+        $('#payFinesModal').on('show.bs.modal', function (event) {
+          var button = $(event.relatedTarget) // Button that triggered the modal
+          var Card_id = button.data('whatever') // Extract info from data-* attributes
+          var modal = $(this)
+          modal.find('.modal-title').text('Pay Fines -- Library Card ' + Card_id);
+
+          $form6.on('submit', function(e){
+            // console.log('FORM 5 SUBMITTED WITH ISBN: '+Isbn);
+
+            e.preventDefault();
+
+            $.ajax({
+              url: "/payfine",
+              type: "GET",
+              data: "&Card_id=" + Card_id
+            }).done(response => {
+              $("#updateFinesDiv").html('<p>'+response+'</p>');
+            });
+          })
         });
 
 
@@ -136,7 +158,8 @@
       <div id="updateFinesDiv"></div>
 
       <br><br>
-      <button id="viewFinesButton" type="submit" class="btn btn-primary mb-2">Receive Payment</button>
+      <p>Press below to view all outstanding fines and accept payments.</p>
+      <button id="viewFinesButton" type="submit" class="btn btn-primary mb-2">List Fines</button>
       <div id="viewFinesDiv"></div>
 
       <br><br><br>
@@ -266,8 +289,8 @@
             </button>
           </div>
           <div class="modal-body">
-            <form id="checkinForm" method="GET" action="/test">
-              <div id="checkinInfoDiv">
+            <form id="payFineForm" method="GET" action="/test">
+              <div id="payFineInfoDiv">
                 <p>User is paying full fine amount?</p>
                 <p>Please Confirm</p>
               </div>

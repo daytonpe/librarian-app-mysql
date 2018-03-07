@@ -289,7 +289,7 @@ con.connect(function(err) {
             //IF FINE ROW EXISTS && !Paid
             else{
               // console.log('UPDATING: '+loan_id);
-              sql = `UPDATE FINES SET Fine_amt = `+fine+` WHERE Loan_id = '`+loan_id+`';`;;
+              sql = `UPDATE FINES SET Fine_amt = `+fine+` WHERE Loan_id = '`+loan_id+`';`;
               con.query(sql, req.body, function(err, result) {
                 if (err) throw err;
                 console.log('One record updated in FINES');
@@ -312,8 +312,8 @@ con.connect(function(err) {
     });
   });
 
-  //RECEIVE FINE PAYMENT
-  app.get("/receivePayment", function(req,res){
+  //LIST FINES
+  app.get("/viewfines", function(req,res){
     let Isbn = req.query.Isbn;
     sql = `
       SELECT  BOOK_LOANS.Card_id, SUM(FINES.Fine_amt) AS Total
@@ -335,6 +335,52 @@ con.connect(function(err) {
     });
   });
 
+  //PAY FINE
+  app.get("/payfine", function(req,res){
+    let Card_id = req.query.Card_id;
+
+    // FIND ALL FINES WHERE Card_id= Card_id
+    sql = `
+    SELECT      *
+    FROM        FINES
+    INNER JOIN  BOOK_LOANS
+    WHERE       FINES.Loan_id = BOOK_LOANS.Loan_id
+                AND Card_id =  `+Card_id+`; `;
+
+    con.query(sql, req.body, function(err, result) {
+      if (err) throw err;
+      for (let i = 0; i < result.length; i++) {
+        sql = `UPDATE FINES SET Paid = 1 WHERE Loan_id = '`+result[i].Loan_id+`';`;
+        con.query(sql, req.body, function(err, result) {
+          if (err) throw err;
+          console.log('One record updated in FINES');
+        });
+      }
+    });
+
+    // Set Paid value on all of them to 1;
+
+
+    // sql = `
+    //   SELECT  BOOK_LOANS.Card_id, SUM(FINES.Fine_amt) AS Total
+    //   FROM    FINES
+    //   NATURAL JOIN BOOK_LOANS
+    //   WHERE   FINES.Paid = 0
+    //   GROUP   BY BOOK_LOANS.Card_id; `;
+    // // console.log(sql);
+    // con.query(sql, req.body, function(err, result) {
+    //   if (err) throw err;
+    //   let table = "";
+    //   for (let i = 0; i < result.length; i++) {
+    //     let payFineButton = "<button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#payFinesModal\" data-whatever=\""+result[i].Card_id+"\">Check Out</button>";
+    //     let newRow = "<p>"+result[i].Card_id+"\t|\t$"+result[i].Total+"\t|\t"+payFineButton+"</p>";
+    //     table+=newRow;
+    //   };
+    //   // console.log("table\n"+table);
+    //   res.send(table)
+    // });
+    res.send('Payment received for Library Card: '+Card_id);
+  });
 
 });
 
