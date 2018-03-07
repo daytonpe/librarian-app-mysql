@@ -67,19 +67,32 @@ con.connect(function(err) {
     console.log("Number of book_author links inserted: " + result.affectedRows);
   });
 
-  // SEED DB WITH SOME BOOK_LOANS and Fines
+  // SEED DB WITH SOME BOOK_LOANS
   let bookLoanData = [
-    [ '0440475333','99','2018-03-06', '2018-02-14', null ],
-    [ '1400045088','99','2018-01-20', '2018-03-06', null ],
-    [ '1400045088','99','2018-02-25', '2018-03-01', null ],
-    [ '0875346197','75','2017-12-20', '2018-03-04', '2018-03-06' ],
-    [ '0671664948','12','2018-03-06', '2018-03-20', null ]
+    [ '0440475333','99','2018-03-06', '2018-02-14', null ],         //Loan_id=1, being fined, person 99
+    [ '1400045088','99','2018-01-20', '2018-03-06', null ],         //Loan_id=2, being fined, person 99
+    [ '1400045088','99','2018-02-25', '2018-03-01', null ],         //Loan_id=3, being fined, person 99
+    [ '0875346197','75','2017-12-20', '2018-03-04', '2018-03-06' ], //Loan_id=4, fined, not-paid(FINES)
+    [ '0671664948','12','2018-03-06', '2018-03-20', null ],         //Loan_id=5, not due yet
+    [ '0439136369','15','2017-01-05', '2017-01-19', '2017-02-15']   //Loan_id=6, fined, paid(FINES)
   ];
   sql = "INSERT INTO BOOK_LOANS (Isbn, Card_id, Date_out, Due_date, Date_in) VALUES ?";
   con.query(sql, [bookLoanData], function(err, result) {
     if (err) throw err;
     console.log("Number of book_author links inserted: " + result.affectedRows);
   });
+
+  // SEED DB WITH SOME FINES
+  let finesData = [
+    [4, '0.25', '0'],
+    [6, '10.50', '1']
+  ];
+  sql = "INSERT FINES (Loan_id, Fine_amt, Paid) VALUES ?";
+  con.query(sql, [finesData], function(err, result) {
+    if (err) throw err;
+    console.log("Number of fines inserted: " + result.affectedRows);
+  });
+  console.log('\n********************\n\n')
 
   //JOIN PUBLIC DIRECTORY FOR CSS
   app.use(express.static(path.join(__dirname, "public")));
@@ -266,20 +279,39 @@ con.connect(function(err) {
 
         //UPDATE FINE TABLE
         // console.log("fine to be paid: "+fineableLoans[i]);
-        sql = `SELECT COUNT(Loan_id) AS loanFines FROM FINES WHERE Loan_id =`+fineableLoans[i].Loan_id+`;`;
+        sql = `SELECT COUNT(Loan_id) AS fineExists, Paid FROM FINES WHERE Loan_id =`+fineableLoans[i].Loan_id+`;`;
         con.query(sql, req.body, function(err, result) {
           if (err) throw err;
-          console.log(result);
-          if (result.loanFines == 1) {
+          console.log('\nIIIIIIIIIIIIIIIII');
+          console.log('LOANID: '+loan_id);
+          console.log(result[0].fineExists);
+          console.log('IIIIIIIIIIIIIIIII\n');
+          if (result[0].fineExists == 1) {
 
             //IF FINE ROW EXISTS && Paid, DO NOTHING
+            if(result.Paid == 1){
+              // console.log('SKIPPING: '+loan_id);
+              console.log('One record skipped (already paid)');
+            }
             //IF FINE ROW EXISTS && !Paid
+            else{
+              // console.log('UPDATING: '+loan_id);
+              sql = `UPDATE FINES SET Fine_amt = `+fine+` WHERE Loan_id = '`+loan_id+`';`;;
+              con.query(sql, req.body, function(err, result) {
+                if (err) throw err;
+                console.log('One record updated in FINES');
+              });
+            }
           }
-          sql = `INSERT INTO FINES (Loan_id, Fine_amt, Paid) VALUES ('`+loan_id+`','`+fine+`','0');`;
-          con.query(sql, req.body, function(err, result) {
-            if (err) throw err;
-            console.log('One record inserted into FINES');
-          });
+          //IF FINE ROW DOES NOT EXIST
+          else{
+            // console.log('INSERTING Loan_id: '+loan_id);
+            sql = `INSERT INTO FINES (Loan_id, Fine_amt, Paid) VALUES ('`+loan_id+`','`+fine+`','0');`;
+            con.query(sql, req.body, function(err, result) {
+              if (err) throw err;
+              console.log('One record inserted into FINES');
+            });
+          }
         });
 
       }
