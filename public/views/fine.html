@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="/css/style.css" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+      $(document).ready(function() {
+
+        const $form6 = $('#payFineForm');
+
+        $('#updateFinesButton').click(function(){
+          $.ajax({
+            url: "/fines",
+            type: "GET"
+          }).done(response => {
+            $("#updateFinesDiv").html('<p>'+response+'</p>');
+          });
+        });
+
+        $('#viewFinesButton').click(function(){
+          $.ajax({
+            url: "/viewfines",
+            type: "GET"
+          }).done(response => {
+            console.log(response);
+            $("#viewFinesDiv").html(response);
+          });
+        });
+
+        $('#payFinesModal').on('show.bs.modal', function (event) {
+          var button = $(event.relatedTarget) // Button that triggered the modal
+          var Card_id = button.data('whatever') // Extract info from data-* attributes
+          var modal = $(this)
+          modal.find('.modal-title').text('Pay Fines -- Library Card ' + Card_id);
+
+          $form6.on('submit', function(e){
+            console.log("FORM 6 SUBMITTED")
+
+            e.preventDefault();
+
+            $.ajax({
+              url: "/payfine",
+              type: "GET",
+              data: "&Card_id=" + Card_id
+            }).done(response => {
+              $("#updateFinesDiv").html('<p>'+response+'</p>');
+            });
+          })
+        });
+      });
+
+    </script>
+
+
+
+  </head>
+
+  <body>
+    <a href="/">Book Search</a>
+    <a href="/loans">Loan Search</a>
+    <a href="/borrower">Borrowers</a>
+
+    <h1 class="title">Fines</h1>
+    <p>Push this button to update fines for all book loans.</p>
+    <button id="updateFinesButton" type="submit" class="btn btn-primary mb-2">Update Fines</button>
+    <div id="updateFinesDiv"></div>
+
+    <br><br>
+    <p>Press below to view all outstanding fines and accept payments.</p>
+    <button id="viewFinesButton" type="submit" class="btn btn-primary mb-2">List Fines</button>
+    <div id="viewFinesDiv"></div>
+
+    <!-- PAY FINES MODAL -->
+    <div class="modal fade" id="payFinesModal" tabindex="-1" role="dialog" aria-labelledby="bookCheckinModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="payFinesModalLabel">Pay Library Fine</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="payFineForm" method="GET">
+              <div id="payFineInfoDiv">
+                <p>Please Confirm</p>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Confirm</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+</html>

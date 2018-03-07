@@ -99,8 +99,26 @@ con.connect(function(err) {
 
   //SERVE HOMEPAGE
   app.get("/", function(req, res) {
-    res.sendFile(path.join(__dirname + "/views/index.html"));
+    res.sendFile(path.join(__dirname + "/public/views/index.html"));
   });
+
+  //SERVE BORROWER PAGE
+  app.get("/borrower", function(req, res) {
+    res.sendFile(path.join(__dirname + "/public/views/borrower.html"));
+  });
+
+  //SERVE FINES PAGE
+  app.get("/fine", function(req, res) {
+    res.sendFile(path.join(__dirname + "/public/views/fine.html"));
+  });
+
+
+  //SERVE LOANS PAGE
+  app.get("/loans", function(req, res) {
+    res.sendFile(path.join(__dirname + "/public/views/loans.html"));
+  });
+
+
 
   //SEARCH BOOKS
   app.get("/search", function(req, res) {
@@ -339,6 +357,8 @@ con.connect(function(err) {
   app.get("/payfine", function(req,res){
     let Card_id = req.query.Card_id;
 
+    console.log('PAYFINE CALLED!');
+
     // FIND ALL FINES WHERE Card_id= Card_id
     sql = `
     SELECT      *
@@ -352,6 +372,9 @@ con.connect(function(err) {
 
       let returned = true; //boolean
       for (let i = 0; i < result.length; i++) {
+        console.log('HHHHHHHHHHHHHH');
+        console.log(result[i]);
+        console.log('HHHHHHHHHHHHHH');
         if (result[i].Date_in == null){
           console.log('Fine payment DECLINED for one book record.\nMust return book first.');
           returned = false;
