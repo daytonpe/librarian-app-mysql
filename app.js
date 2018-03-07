@@ -68,6 +68,19 @@ con.connect(function(err) {
     console.log("Number of book_author links inserted: " + result.affectedRows);
   });
 
+
+  // SEED DB WITH SOME BOOK_LOANS and Fines
+  let bookLoanData = [
+    [ '0440475333','99','2018-03-06', '2018-02-14' ],
+    [ '1400045088','99','2018-01-20', '2018-03-06' ],
+    [ '0875346197','75','2017-12-20', '2018-03-04' ]
+  ];
+  sql = "INSERT INTO BOOK_LOANS (Isbn, Card_id, Date_out, Due_date) VALUES ?";
+  con.query(sql, [bookLoanData], function(err, result) {
+    if (err) throw err;
+    console.log("Number of book_author links inserted: " + result.affectedRows);
+  });
+
   //JOIN PUBLIC DIRECTORY FOR CSS
   app.use(express.static(path.join(__dirname, "public")));
 
@@ -76,7 +89,7 @@ con.connect(function(err) {
     res.sendFile(path.join(__dirname + "/views/index.html"));
   });
 
-  //SEARCH
+  //SEARCH BOOKS
   app.get("/search", function(req, res) {
     const searchTerm = req.query.search; //grab search term from form
     sql =
@@ -168,7 +181,7 @@ con.connect(function(err) {
                 let Date_out = 'NOW()';
                 let Due_date = 'NOW() + INTERVAL 14 DAY';
                 sql = `INSERT INTO BOOK_LOANS (Isbn, Card_id, Date_out, Due_date) VALUES ('`+Isbn+`','`+Card_id+`',`+Date_out+`, `+Due_date+`)`;
-                // console.log(sql);
+                console.log(sql);
                 con.query(sql, req.body, function(err, result) {
                   if (err) throw err;
                   checkoutResponseObject = {
@@ -184,7 +197,6 @@ con.connect(function(err) {
       }
     });
   });
-
 
   //SEARCH LOANS
   app.get("/loan", function(req, res) {
@@ -211,6 +223,7 @@ con.connect(function(err) {
     });
   });
 
+  //CHECK IN A BOOK
   app.get("/checkin", function(req,res){
     let Isbn = req.query.Isbn;
     sql = `UPDATE BOOK_LOANS SET DATE_IN = NOW() WHERE Isbn = '`+Isbn+`';`;
