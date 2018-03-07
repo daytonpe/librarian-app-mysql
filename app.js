@@ -96,7 +96,7 @@ con.connect(function(err) {
       if (err) throw err;
       let table = "";
       for (let i = 0; i < result.length; i++) {
-        let checkoutButton = "<button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#exampleModal\" data-whatever=\""+result[i].Isbn+"\">Check Out</button>";
+        let checkoutButton = "<button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#bookCheckoutModal\" data-whatever=\""+result[i].Isbn+"\">Check Out</button>";
         let newRow = "<p>"+result[i].Isbn+"\t|\t"+result[i].Title+"\t|\t"+result[i].Authors+"\t|"+checkoutButton+"</p>";
         // console.log(newRow);
         table+=newRow;

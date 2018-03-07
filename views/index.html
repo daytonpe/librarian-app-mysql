@@ -41,7 +41,7 @@
           })
         }
 
-        $('#exampleModal').on('show.bs.modal', function (event) {
+        $('#bookCheckoutModal').on('show.bs.modal', function (event) {
           var button = $(event.relatedTarget) // Button that triggered the modal
           var Isbn = button.data('whatever') // Extract info from data-* attributes
           var modal = $(this)
@@ -104,7 +104,7 @@
       <br><br><br>
 
       <h1 class="title">Search Books</h1>
-      <p>Search for a book in the database by any combination of ISBN, Title, and/or Author(s)</h3>
+      <p>Search for a book in the database by ISBN, Title, or Author(s)</h3>
 
       <form class = "form-inline" id="searchForm" method="GET" action="/search">
         <div class="form-group mx-sm-3 mb-2">
@@ -118,35 +118,52 @@
 
       <div id="output"></div>
 
+      <br><br><br>
+
+      <h1 class="title">Search Loans</h1>
+      <p>Search for book loans by ISBN, Borrower Name, Card_id</h3>
+
+      <form class = "form-inline" id="searchLoanForm" method="GET" action="/searchLoan">
+        <div class="form-group mx-sm-3 mb-2">
+          <!-- <label for="search">Search</label> -->
+          <input class="form-control" name="searchLoan" type="text" id="searchLoan" placeholder="Joe Borrower" required/>
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Search</button>
+      </form>
+
+      <br><br>
+
+      <div id="output"></div>
+
       <br><br>
     </div>
 
-      <br><br><br><br>
 
-      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">New message</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form id="checkoutForm" method="GET" action="/test">
-                <div class="form-group" id="checkoutInfoDiv">
-                  <label for="Card_id"class="col-form-label" id="checkoutInputFormLabel">Borrower Card ID:</label>
-                  <input type="number" class="form-control" name="Card_id" id="checkoutInputForm">
-                </div>
-                <div class="modal-footer">
-                  <button type="submit" class="btn btn-primary">Checkout</button>
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-              </form>
-            </div>
+    <!-- CHECKOUT MODAL -->
+    <div class="modal fade" id="bookCheckoutModal" tabindex="-1" role="dialog" aria-labelledby="bookCheckoutModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="bookCheckoutModalLabel">New message</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="checkoutForm" method="GET" action="/test">
+              <div class="form-group" id="checkoutInfoDiv">
+                <label for="Card_id"class="col-form-label" id="checkoutInputFormLabel">Borrower Card ID:</label>
+                <input type="number" class="form-control" name="Card_id" id="checkoutInputForm">
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Checkout</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
+    </div>
 
   </body>
 
