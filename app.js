@@ -119,7 +119,7 @@ con.connect(function(err) {
     });
   });
 
-  //CHECKOUT A BOOK
+  //CHECK OUT A BOOK
   //TODO: unchain this so it's more readable
   app.get("/checkout", function(req, res) {
     let Isbn = req.query.Isbn;
@@ -164,7 +164,7 @@ con.connect(function(err) {
                 let Date_out = 'NOW()';
                 let Due_date = 'NOW() + INTERVAL 14 DAY';
                 sql = `INSERT INTO BOOK_LOANS (Isbn, Card_id, Date_out, Due_date) VALUES ('`+Isbn+`','`+Card_id+`',`+Date_out+`, `+Due_date+`)`;
-                console.log(sql);
+                // console.log(sql);
                 con.query(sql, req.body, function(err, result) {
                   if (err) throw err;
                   checkoutResponseObject = {
@@ -178,6 +178,46 @@ con.connect(function(err) {
           }
         });
       }
+    });
+  });
+
+
+  //SEARCH LOANS
+  app.get("/loan", function(req, res) {
+    const searchTerm = req.query.searchLoan; //grab search term from form
+    sql =
+      `SELECT  BOOK_LOANS.Isbn,
+              BOOK_LOANS.Card_id,
+              BORROWER.Bname
+      FROM    BOOK_LOANS
+      INNER JOIN BORROWER ON BOOK_LOANS.Card_id = BORROWER.Card_id
+      WHERE   BOOK_LOANS.Isbn LIKE '%`+searchTerm+`%'
+              OR BOOK_LOANS.Card_id LIKE '%`+searchTerm+`%'
+              OR BORROWER.Bname LIKE '%`+searchTerm+`%';`; //insert searchTerm into the sql query
+    con.query(sql, req.body, function(err, result) {
+      if (err) throw err;
+      let table = "";
+      for (let i = 0; i < result.length; i++) {
+        let checkinButton = "<button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#bookCheckinModal\" data-whatever=\""+result[i].Isbn+"\">Check In</button>";
+        let newRow = "<p>"+result[i].Isbn+"\t|\t"+result[i].Card_id+"\t|\t"+result[i].Bname+"\t|"+checkinButton+"</p>";
+        // console.log(newRow);
+        table+=newRow;
+      }
+      res.send(table);
+    });
+  });
+
+  app.get("/checkin", function(req,res){
+    let Isbn = req.query.Isbn;
+    sql = `UPDATE BOOK_LOANS SET DATE_IN = NOW() WHERE Isbn = '`+Isbn+`';`;
+    console.log(sql);
+    con.query(sql, req.body, function(err, result) {
+      if (err) throw err;
+      checkoutResponseObject = {
+        error: false,
+        message: 'Checkin successful.'
+      };
+      res.send(checkoutResponseObject)
     });
   });
 
