@@ -3,7 +3,6 @@ var mysql = require("mysql");
 var fs = require("fs");
 var normalizer = require("./normalizer");
 var path = require("path");
-var
 
 //NORMALIZE THE DATA
 borrowerData = normalizer.normalizeBorrower();
@@ -68,14 +67,15 @@ con.connect(function(err) {
     console.log("Number of book_author links inserted: " + result.affectedRows);
   });
 
-
   // SEED DB WITH SOME BOOK_LOANS and Fines
   let bookLoanData = [
-    [ '0440475333','99','2018-03-06', '2018-02-14' ],
-    [ '1400045088','99','2018-01-20', '2018-03-06' ],
-    [ '0875346197','75','2017-12-20', '2018-03-04' ]
+    [ '0440475333','99','2018-03-06', '2018-02-14', null ],
+    [ '1400045088','99','2018-01-20', '2018-03-06', null ],
+    [ '1400045088','99','2018-02-25', '2018-03-01', null ],
+    [ '0875346197','75','2017-12-20', '2018-03-04', '2018-03-06' ],
+    [ '0671664948','12','2018-03-06', '2018-03-20', null ]
   ];
-  sql = "INSERT INTO BOOK_LOANS (Isbn, Card_id, Date_out, Due_date) VALUES ?";
+  sql = "INSERT INTO BOOK_LOANS (Isbn, Card_id, Date_out, Due_date, Date_in) VALUES ?";
   con.query(sql, [bookLoanData], function(err, result) {
     if (err) throw err;
     console.log("Number of book_author links inserted: " + result.affectedRows);
@@ -235,6 +235,22 @@ con.connect(function(err) {
         message: 'Checkin successful.'
       };
       res.send(checkoutResponseObject)
+    });
+  });
+
+  //UPDATE FINES
+  app.get("/fines", function(req, res) {
+    sql = "SELECT * FROM BOOK_LOANS;"
+    con.query(sql, req.body, function(err, result) {
+      if (err) throw err;
+      let table = "";
+      for (let i = 0; i < result.length; i++) {
+        let checkoutButton = "<button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#bookCheckoutModal\" data-whatever=\""+result[i].Isbn+"\">Check Out</button>";
+        let newRow = "<p>"+result[i].Isbn+"\t|\t"+result[i].Title+"\t|\t"+result[i].Authors+"\t|"+checkoutButton+"</p>";
+        // console.log(newRow);
+        table+=newRow;
+      }
+      res.send("Fines Updated");
     });
   });
 

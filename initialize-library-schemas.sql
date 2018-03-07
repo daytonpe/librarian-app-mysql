@@ -46,7 +46,7 @@ CREATE TABLE BORROWER(
 );
 
 -- Create the Book Loan Schema
--- DROP TABLE IF EXISTS BOOK_LOANS; //TODO: Put this back in before turning in.
+DROP TABLE IF EXISTS BOOK_LOANS; 
 CREATE TABLE BOOK_LOANS(
   Loan_id INT AUTO_INCREMENT,
   Isbn VARCHAR(10) NOT NULL,

@@ -100,6 +100,17 @@
             });
           })
         });
+
+        $('#updateFinesButton').click(function(){
+          $.ajax({
+            url: "/fines",
+            type: "GET"
+          }).done(response => {
+            $("#updateFinesDiv").html('<p>'+response+'</p>');
+          });
+        });
+
+
       });
 
 
@@ -109,6 +120,12 @@
 
   <body>
     <div id="main">
+      <h1 class="title">Fines</h1>
+      <p>Push this button to update fines for all book loans.</p>
+      <button id="updateFinesButton" type="submit" class="btn btn-primary mb-2">Update Fines</button>
+      <div id="updateFinesDiv"></div>
+
+      <br><br><br>
       <h1 class="title">Add Borrower</h1>
       <p>Add a borrower to the database to issue library card</p>
       <br>
