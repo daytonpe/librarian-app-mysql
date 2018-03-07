@@ -53,9 +53,28 @@
   </head>
 
   <body>
-    <a href="/">Book Search</a>
-    <a href="/borrower">Borrowers</a>
-    <a href="/fine">Fine Search</a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/">Book Search</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="borrower">Add Borrower</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/fine">Manage Fines</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/loans">Book Loans</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
 
     <div class="main">
       <h1 class="title">Search Loans</h1>
