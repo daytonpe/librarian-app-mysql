@@ -50,7 +50,6 @@
     </script>
 
 
-
   </head>
 
   <body>
@@ -58,21 +57,23 @@
     <a href="/borrower">Borrowers</a>
     <a href="/fine">Fine Search</a>
 
+    <div class="main">
+      <h1 class="title">Search Loans</h1>
+      <p>Search for book loans by ISBN, Borrower Name, Card_id</h3>
 
-    <h1 class="title">Search Loans</h1>
-    <p>Search for book loans by ISBN, Borrower Name, Card_id</h3>
+      <form class = "form-inline" id="searchLoanForm" method="GET" action="/searchLoan">
+        <div class="form-group mx-sm-3 mb-2">
+          <!-- <label for="search">Search</label> -->
+          <input class="form-control" name="searchLoan" type="text" id="searchLoan" placeholder="Joe Borrower" required/>
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Search</button>
+      </form>
 
-    <form class = "form-inline" id="searchLoanForm" method="GET" action="/searchLoan">
-      <div class="form-group mx-sm-3 mb-2">
-        <!-- <label for="search">Search</label> -->
-        <input class="form-control" name="searchLoan" type="text" id="searchLoan" placeholder="Joe Borrower" required/>
-      </div>
-      <button type="submit" class="btn btn-primary mb-2">Search</button>
-    </form>
+      <br><br>
 
-    <br><br>
+      <div id="loanOutput"></div>
 
-    <div id="loanOutput"></div>
+    </div>
     <!-- CHECK IN MODAL -->
     <div class="modal fade" id="bookCheckinModal" tabindex="-1" role="dialog" aria-labelledby="bookCheckinModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">

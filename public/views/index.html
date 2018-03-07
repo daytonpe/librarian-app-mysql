@@ -13,11 +13,7 @@
         const $form1 = $('#searchBookForm');
         const $form3 = $('#checkoutForm');
 
-
-
-
         $form1.on('submit', searchBookSubmitHandler);
-
 
         function searchBookSubmitHandler (e) {
           e.preventDefault()
@@ -29,8 +25,6 @@
             $("#output").html(response);
           })
         }
-
-
 
         $('#bookCheckoutModal').on('show.bs.modal', function (event) {
           var button = $(event.relatedTarget) // Button that triggered the modal
@@ -71,10 +65,7 @@
     <a href="/borrower">Borrowers</a>
     <a href="/fine">Fine Search</a>
 
-    <div id="main">
-
-
-      <br><br><br>
+    <div class="main">
 
       <h1 class="title">Search Books</h1>
       <p>Search for a book in the database by ISBN, Title, or Author(s)</h3>
@@ -93,7 +84,6 @@
 
 
     </div>
-
 
     <!-- CHECK OUT MODAL -->
     <div class="modal fade" id="bookCheckoutModal" tabindex="-1" role="dialog" aria-labelledby="bookCheckoutModalLabel" aria-hidden="true">
@@ -120,8 +110,6 @@
         </div>
       </div>
     </div>
-
-
 
   </body>
 

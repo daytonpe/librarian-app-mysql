@@ -55,8 +55,6 @@
 
     </script>
 
-
-
   </head>
 
   <body>
@@ -64,18 +62,22 @@
     <a href="/loans">Loan Search</a>
     <a href="/borrower">Borrowers</a>
 
-    <h1 class="title">Fines</h1>
-    <p>Push this button to update fines for all book loans.</p>
-    <button id="updateFinesButton" type="submit" class="btn btn-primary mb-2">Update Fines</button>
-    <div id="updateFinesDiv"></div>
+    <div class="main">
 
-    <br><br>
-    <p>Press below to view all outstanding fines and accept payments.</p>
-    <button id="viewFinesButton" type="submit" class="btn btn-primary mb-2">List Fines</button>
-    <div id="viewFinesDiv"></div>
+      <h1 class="title">Fines</h1>
+      <p>Push this button to update fines for all book loans.</p>
+      <button id="updateFinesButton" type="submit" class="btn btn-primary mb-2">Update Fines</button>
+      <div id="updateFinesDiv"></div>
 
-    <!-- PAY FINES MODAL -->
-    <div class="modal fade" id="payFinesModal" tabindex="-1" role="dialog" aria-labelledby="bookCheckinModalLabel" aria-hidden="true">
+      <br><br>
+      <p>Press below to view all outstanding fines and accept payments.</p>
+      <button id="viewFinesButton" type="submit" class="btn btn-primary mb-2">List Fines</button>
+      <div id="viewFinesDiv"></div>
+
+    </div>
+
+      <!-- PAY FINES MODAL -->
+      <div class="modal fade" id="payFinesModal" tabindex="-1" role="dialog" aria-labelledby="bookCheckinModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -98,6 +100,7 @@
         </div>
       </div>
     </div>
+
   </body>
 
 </html>
