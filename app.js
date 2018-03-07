@@ -114,8 +114,12 @@ con.connect(function(err) {
     sql = `INSERT INTO BORROWER (Ssn, Bname, Address, Phone) VALUES ('`+ssn+`', '`+bname+`', '`+address+`', '`+phone+`') `;
     console.log(sql);
     con.query(sql, req.body, function(err, result) {
-      if (err) throw err;
-      res.send("Borrower added: "+bname);
+      if (err) {
+        res.send("There has been an issue creating a new borrower with these credentials.");
+      }
+      else{
+        res.send("Borrower added: "+bname);
+      }
     });
   });
 

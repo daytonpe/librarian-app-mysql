@@ -41,7 +41,8 @@ CREATE TABLE BORROWER(
   Bname VARCHAR(50) NOT NULL,
   Address VARCHAR(50) NOT NULL,
   Phone VARCHAR(16),
-  CONSTRAINT pk_borrower PRIMARY KEY (Card_id)
+  CONSTRAINT pk_borrower PRIMARY KEY (Card_id),
+  UNIQUE (Ssn)
 );
 
 -- Create the Book Loan Schema

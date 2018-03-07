@@ -39,7 +39,7 @@
             type:'GET',
             data: $form2.serialize()
           }).done(response => {
-            // $("#createBorrowerSuccess").html(response);
+            $("#createBorrowerSuccess").html('<p>'+response+'</p>');
             console.log(response);
           })
         }
