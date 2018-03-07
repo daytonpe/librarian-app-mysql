@@ -249,28 +249,39 @@ con.connect(function(err) {
     // console.log(sql);
     con.query(sql, req.body, function(err, fineableLoans) {
       if (err) throw err;
-      console.log(fineableLoans);
+      // console.log(fineableLoans);
       for (let i = 0; i < fineableLoans.length; i++) {
-        //IF HAS Date_in
-          if(fineableLoans[i].Date_in !=null){
-            // console.log("fine to be paid: "+fineableLoans[i]);
-            //IF FINE ROW EXISTS && Paid
+        //CALCULATE FINES
+        //IF HAS Date_in (Date_in != null)--Exact Finest
+        let loan_id = fineableLoans[i].Loan_id;
+        let days;
+        if(fineableLoans[i].Date_in !=null){
+          days = fineableLoans[i].exactFineDays;
+        }
+        //IF STILL CHECKED OUT (Date_in==null)--Estimate Fine
+        else{
+          days = fineableLoans[i].estimateFineDays;
+        }
+        let fine = days * .25;
 
+        //UPDATE FINE TABLE
+        // console.log("fine to be paid: "+fineableLoans[i]);
+        sql = `SELECT COUNT(Loan_id) AS loanFines FROM FINES WHERE Loan_id =`+fineableLoans[i].Loan_id+`;`;
+        con.query(sql, req.body, function(err, result) {
+          if (err) throw err;
+          console.log(result);
+          if (result.loanFines == 1) {
+
+            //IF FINE ROW EXISTS && Paid, DO NOTHING
             //IF FINE ROW EXISTS && !Paid
-
-            //ELSE CREATE ROW IN FINE
-
           }
-          //IF STILL CHECKED OUT (Date_in==null)--Estimate Fine
-          else{
-            // console.log(fineableLoans[i]);
-            let days = fineableLoans[i].estimateFineDays;
-            let fine = days * .25;
-            console.log("fine: "+fine);
-            // console.log(typeof Due_date);
-            // sql = `SELECT DATEDIFF(NOW(), `+fineableLoans[i].Due_date+`) AS DateDiff;`;
+          sql = `INSERT INTO FINES (Loan_id, Fine_amt, Paid) VALUES ('`+loan_id+`','`+fine+`','0');`;
+          con.query(sql, req.body, function(err, result) {
+            if (err) throw err;
+            console.log('One record inserted into FINES');
+          });
+        });
 
-          }
       }
       res.send("Fines Updated");
     });
