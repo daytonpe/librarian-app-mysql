@@ -71,7 +71,7 @@ con.connect(function(err) {
   let bookLoanData = [
     [ '0440475333','99','2018-03-06', '2018-02-14', null ],         //Loan_id=1, being fined, person 99
     [ '1400045088','99','2018-01-20', '2018-03-06', null ],         //Loan_id=2, being fined, person 99
-    [ '1400045088','99','2018-02-25', '2018-03-01', null ],         //Loan_id=3, being fined, person 99
+    [ '1400045088','99','2018-02-25', '2018-03-01', '2018-03-07' ], //Loan_id=3, being fined, person 99
     [ '0875346197','75','2017-12-20', '2018-03-04', '2018-03-06' ], //Loan_id=4, fined, not-paid(FINES)
     [ '0671664948','12','2018-03-06', '2018-03-20', null ],         //Loan_id=5, not due yet
     [ '0439136369','15','2017-01-05', '2017-01-19', '2017-02-15']   //Loan_id=6, fined, paid(FINES)
@@ -326,7 +326,7 @@ con.connect(function(err) {
       if (err) throw err;
       let table = "";
       for (let i = 0; i < result.length; i++) {
-        let payFineButton = "<button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#payFinesModal\" data-whatever=\""+result[i].Card_id+"\">Check Out</button>";
+        let payFineButton = "<button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#payFinesModal\" data-whatever=\""+result[i].Card_id+"\">Pay</button>";
         let newRow = "<p>"+result[i].Card_id+"\t|\t$"+result[i].Total+"\t|\t"+payFineButton+"</p>";
         table+=newRow;
       };
@@ -349,37 +349,29 @@ con.connect(function(err) {
 
     con.query(sql, req.body, function(err, result) {
       if (err) throw err;
+
+      let returned = true; //boolean
       for (let i = 0; i < result.length; i++) {
-        sql = `UPDATE FINES SET Paid = 1 WHERE Loan_id = '`+result[i].Loan_id+`';`;
-        con.query(sql, req.body, function(err, result) {
-          if (err) throw err;
-          console.log('One record updated in FINES');
-        });
+        if (result[i].Date_in == null){
+          console.log('Fine payment DECLINED for one book record.\nMust return book first.');
+          returned = false;
+        }
+        else {
+          sql = `UPDATE FINES SET Paid = 1 WHERE Loan_id = '`+result[i].Loan_id+`';`;
+          con.query(sql, req.body, function(err, result) {
+            if (err) throw err;
+            console.log('Fine payment received for one book record.');
+          });
+        }
+
+      }
+      if (returned == true) {
+        res.send('Payment received for Library Card: '+Card_id);
+      }else{
+        res.send('You must return books before you can pay fine for them.\n Fine adjusted accordingly for library card: '+Card_id);
       }
     });
 
-    // Set Paid value on all of them to 1;
-
-
-    // sql = `
-    //   SELECT  BOOK_LOANS.Card_id, SUM(FINES.Fine_amt) AS Total
-    //   FROM    FINES
-    //   NATURAL JOIN BOOK_LOANS
-    //   WHERE   FINES.Paid = 0
-    //   GROUP   BY BOOK_LOANS.Card_id; `;
-    // // console.log(sql);
-    // con.query(sql, req.body, function(err, result) {
-    //   if (err) throw err;
-    //   let table = "";
-    //   for (let i = 0; i < result.length; i++) {
-    //     let payFineButton = "<button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#payFinesModal\" data-whatever=\""+result[i].Card_id+"\">Check Out</button>";
-    //     let newRow = "<p>"+result[i].Card_id+"\t|\t$"+result[i].Total+"\t|\t"+payFineButton+"</p>";
-    //     table+=newRow;
-    //   };
-    //   // console.log("table\n"+table);
-    //   res.send(table)
-    // });
-    res.send('Payment received for Library Card: '+Card_id);
   });
 
 });
