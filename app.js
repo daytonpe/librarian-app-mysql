@@ -240,15 +240,37 @@ con.connect(function(err) {
 
   //UPDATE FINES
   app.get("/fines", function(req, res) {
-    sql = "SELECT * FROM BOOK_LOANS;"
-    con.query(sql, req.body, function(err, result) {
+    //select all loans that would incur a fine
+    sql = `
+      SELECT Loan_id, Isbn, Card_id, date(Date_out), date(Due_date), date(Date_in), DateDiff(Date_in, Due_Date) AS exactFineDays, DateDiff(NOW(), Due_Date) AS estimateFineDays
+      FROM  BOOK_LOANS
+      WHERE NOW() > Due_date
+            OR Date_in > Due_date;`
+    // console.log(sql);
+    con.query(sql, req.body, function(err, fineableLoans) {
       if (err) throw err;
-      let table = "";
-      for (let i = 0; i < result.length; i++) {
-        let checkoutButton = "<button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#bookCheckoutModal\" data-whatever=\""+result[i].Isbn+"\">Check Out</button>";
-        let newRow = "<p>"+result[i].Isbn+"\t|\t"+result[i].Title+"\t|\t"+result[i].Authors+"\t|"+checkoutButton+"</p>";
-        // console.log(newRow);
-        table+=newRow;
+      console.log(fineableLoans);
+      for (let i = 0; i < fineableLoans.length; i++) {
+        //IF HAS Date_in
+          if(fineableLoans[i].Date_in !=null){
+            // console.log("fine to be paid: "+fineableLoans[i]);
+            //IF FINE ROW EXISTS && Paid
+
+            //IF FINE ROW EXISTS && !Paid
+
+            //ELSE CREATE ROW IN FINE
+
+          }
+          //IF STILL CHECKED OUT (Date_in==null)--Estimate Fine
+          else{
+            // console.log(fineableLoans[i]);
+            let days = fineableLoans[i].estimateFineDays;
+            let fine = days * .25;
+            console.log("fine: "+fine);
+            // console.log(typeof Due_date);
+            // sql = `SELECT DATEDIFF(NOW(), `+fineableLoans[i].Due_date+`) AS DateDiff;`;
+
+          }
       }
       res.send("Fines Updated");
     });
