@@ -59,10 +59,12 @@
     </nav>
     <div class="main">
       <h1 class="title">Add Borrower</h1>
-      <p>Add a borrower to the database to issue library card</p>
+      <p>Add a borrower to issue library card</p>
+      <br>
+      <div id="createBorrowerSuccess"></div>
       <br>
 
-      <form class = "form-inline" id="createBorrowerForm" method="GET" action="/createBorrower">
+      <form id="createBorrowerForm" method="GET" action="/createBorrower">
         <div class="form-group">
           <label for="name">Name</label>
           <input class="form-control"  name="name" type="name" id="bname" placeholder="Han Solo" required>
@@ -73,16 +75,16 @@
         </div>
         <div class="form-group">
           <label for="ssn">SSN</label>
-          <input class="form-control"  name="ssn" type="text" id="ssn" placeholder="111223333" required>
+          <input class="form-control"  name="ssn" type="number" id="ssn" placeholder="111223333" required>
         </div>
         <div class="form-group">
           <label for="phone">Phone</label>
-          <input class="form-control" name="phone" type="phone" id="phone" placeholder="9998887777">
+          <input class="form-control" name="phone" type="number" id="phone" placeholder="9998887777">
         </div>
         <button type="submit" class="btn btn-primary mb-2">Submit</button>
       </form>
 
-      <div id="createBorrowerSuccess"></div>
+
     </div>
   </body>
 

@@ -168,7 +168,6 @@ con.connect(function(err) {
   });
 
   //CHECK OUT A BOOK
-  //TODO: unchain this so it's more readable
   app.get("/checkout", function(req, res) {
     let Isbn = req.query.Isbn;
     let Card_id = req.query.Card_id;
@@ -232,15 +231,17 @@ con.connect(function(err) {
   //SEARCH LOANS
   app.get("/loan", function(req, res) {
     const searchTerm = req.query.searchLoan; //grab search term from form
-    sql =
-      `SELECT  BOOK_LOANS.Isbn,
+    sql =`
+      SELECT  BOOK_LOANS.Isbn,
               BOOK_LOANS.Card_id,
+              BOOK_LOANS.Date_in,
               BORROWER.Bname
       FROM    BOOK_LOANS
       INNER JOIN BORROWER ON BOOK_LOANS.Card_id = BORROWER.Card_id
-      WHERE   BOOK_LOANS.Isbn LIKE '%`+searchTerm+`%'
+      WHERE   (BOOK_LOANS.Isbn LIKE '%`+searchTerm+`%'
               OR BOOK_LOANS.Card_id LIKE '%`+searchTerm+`%'
-              OR BORROWER.Bname LIKE '%`+searchTerm+`%';`; //insert searchTerm into the sql query
+              OR BORROWER.Bname LIKE '%`+searchTerm+`%')
+              AND Date_in IS NULL;`
     con.query(sql, req.body, function(err, result) {
       if (err) throw err;
       let table = "";
@@ -372,9 +373,9 @@ con.connect(function(err) {
 
       let returned = true; //boolean
       for (let i = 0; i < result.length; i++) {
-        console.log('HHHHHHHHHHHHHH');
-        console.log(result[i]);
-        console.log('HHHHHHHHHHHHHH');
+        // console.log('HHHHHHHHHHHHHH');
+        // console.log(result[i]);
+        // console.log('HHHHHHHHHHHHHH');
         if (result[i].Date_in == null){
           console.log('Fine payment DECLINED for one book record.\nMust return book first.');
           returned = false;
