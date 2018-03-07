@@ -289,7 +289,7 @@ con.connect(function(err) {
           if (result[0].fineExists == 1) {
 
             //IF FINE ROW EXISTS && Paid, DO NOTHING
-            if(result.Paid == 1){
+            if(result[0].Paid == 1){
               // console.log('SKIPPING: '+loan_id);
               console.log('One record skipped (already paid)');
             }
