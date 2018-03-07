@@ -259,7 +259,6 @@ con.connect(function(err) {
       FROM  BOOK_LOANS
       WHERE NOW() > Due_date
             OR Date_in > Due_date;`
-    // console.log(sql);
     con.query(sql, req.body, function(err, fineableLoans) {
       if (err) throw err;
       // console.log(fineableLoans);
@@ -278,19 +277,13 @@ con.connect(function(err) {
         let fine = days * .25;
 
         //UPDATE FINE TABLE
-        // console.log("fine to be paid: "+fineableLoans[i]);
         sql = `SELECT COUNT(Loan_id) AS fineExists, Paid FROM FINES WHERE Loan_id =`+fineableLoans[i].Loan_id+`;`;
         con.query(sql, req.body, function(err, result) {
           if (err) throw err;
-          console.log('\nIIIIIIIIIIIIIIIII');
-          console.log('LOANID: '+loan_id);
-          console.log(result[0].fineExists);
-          console.log('IIIIIIIIIIIIIIIII\n');
           if (result[0].fineExists == 1) {
 
             //IF FINE ROW EXISTS && Paid, DO NOTHING
             if(result[0].Paid == 1){
-              // console.log('SKIPPING: '+loan_id);
               console.log('One record skipped (already paid)');
             }
             //IF FINE ROW EXISTS && !Paid
@@ -318,6 +311,30 @@ con.connect(function(err) {
       res.send("Fines Updated");
     });
   });
+
+  //RECEIVE FINE PAYMENT
+  app.get("/receivePayment", function(req,res){
+    let Isbn = req.query.Isbn;
+    sql = `
+      SELECT  BOOK_LOANS.Card_id, SUM(FINES.Fine_amt) AS Total
+      FROM    FINES
+      NATURAL JOIN BOOK_LOANS
+      WHERE   FINES.Paid = 0
+      GROUP   BY BOOK_LOANS.Card_id; `;
+    // console.log(sql);
+    con.query(sql, req.body, function(err, result) {
+      if (err) throw err;
+      let table = "";
+      for (let i = 0; i < result.length; i++) {
+        let payFineButton = "<button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#payFinesModal\" data-whatever=\""+result[i].Card_id+"\">Check Out</button>";
+        let newRow = "<p>"+result[i].Card_id+"\t|\t$"+result[i].Total+"\t|\t"+payFineButton+"</p>";
+        table+=newRow;
+      };
+      // console.log("table\n"+table);
+      res.send(table)
+    });
+  });
+
 
 });
 
