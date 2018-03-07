@@ -10,6 +10,10 @@
   margin-right: 10%;
 }
 
+p.main{
+  padding-top: 5px;
+}
+
 #searchResultTable {
   width: 70%;
   margin-left: auto;
@@ -23,4 +27,25 @@ div#output{
 #createBorrowerForm{
   text-align: left;
   /* width: 70%; */
+}
+
+#createBorrowerForm{
+  width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 100px;
+}
+
+#searchBookForm, #searchLoanForm{
+  width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#search, #searchLoan{
+  width: 375px;
+}
+
+p{
+  padding-top: 8px;
 }

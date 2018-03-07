@@ -112,13 +112,10 @@ con.connect(function(err) {
     res.sendFile(path.join(__dirname + "/public/views/fine.html"));
   });
 
-
   //SERVE LOANS PAGE
   app.get("/loans", function(req, res) {
     res.sendFile(path.join(__dirname + "/public/views/loans.html"));
   });
-
-
 
   //SEARCH BOOKS
   app.get("/search", function(req, res) {
@@ -138,11 +135,10 @@ con.connect(function(err) {
       GROUP   BY BOOK.Isbn, BOOK.Title`; //insert searchTerm into the sql query
     con.query(sql, req.body, function(err, result) {
       if (err) throw err;
-      let table = "";
+      let table = "<strong>ISBN &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Title &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Author(s)</strong>";
       for (let i = 0; i < result.length; i++) {
         let checkoutButton = "<button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#bookCheckoutModal\" data-whatever=\""+result[i].Isbn+"\">Check Out</button>";
         let newRow = "<p>"+result[i].Isbn+"\t|\t"+result[i].Title+"\t|\t"+result[i].Authors+"\t|"+checkoutButton+"</p>";
-        // console.log(newRow);
         table+=newRow;
       }
       res.send(table);
@@ -244,7 +240,7 @@ con.connect(function(err) {
               AND Date_in IS NULL;`
     con.query(sql, req.body, function(err, result) {
       if (err) throw err;
-      let table = "";
+      let table = "<strong>Isbn &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Card ID&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Name</strong>";
       for (let i = 0; i < result.length; i++) {
         let checkinButton = "<button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#bookCheckinModal\" data-whatever=\""+result[i].Isbn+"\">Check In</button>";
         let newRow = "<p>"+result[i].Isbn+"\t|\t"+result[i].Card_id+"\t|\t"+result[i].Bname+"\t|"+checkinButton+"</p>";
@@ -343,7 +339,7 @@ con.connect(function(err) {
     // console.log(sql);
     con.query(sql, req.body, function(err, result) {
       if (err) throw err;
-      let table = "";
+      let table = "<strong>Card_id     &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;     Fine</strong>";
       for (let i = 0; i < result.length; i++) {
         let payFineButton = "<button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#payFinesModal\" data-whatever=\""+result[i].Card_id+"\">Pay</button>";
         let newRow = "<p>"+result[i].Card_id+"\t|\t$"+result[i].Total+"\t|\t"+payFineButton+"</p>";
@@ -358,8 +354,6 @@ con.connect(function(err) {
   app.get("/payfine", function(req,res){
     let Card_id = req.query.Card_id;
 
-    console.log('PAYFINE CALLED!');
-
     // FIND ALL FINES WHERE Card_id= Card_id
     sql = `
     SELECT      *
@@ -373,9 +367,6 @@ con.connect(function(err) {
 
       let returned = true; //boolean
       for (let i = 0; i < result.length; i++) {
-        // console.log('HHHHHHHHHHHHHH');
-        // console.log(result[i]);
-        // console.log('HHHHHHHHHHHHHH');
         if (result[i].Date_in == null){
           console.log('Fine payment DECLINED for one book record.\nMust return book first.');
           returned = false;
@@ -387,7 +378,6 @@ con.connect(function(err) {
             console.log('Fine payment received for one book record.');
           });
         }
-
       }
       if (returned == true) {
         res.send('Payment received for Library Card: '+Card_id);
@@ -395,9 +385,7 @@ con.connect(function(err) {
         res.send('You must return books before you can pay fine for them.\n Fine adjusted accordingly for library card: '+Card_id);
       }
     });
-
   });
-
 });
 
 try {
